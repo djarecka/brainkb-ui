@@ -1,0 +1,584 @@
+[
+  {
+    "fields": {
+      "Role": "I work with the DCAIC Leadership team",
+      "Expertise": "methods for reproducible research",
+      "Interest": "how the human social brain develops",
+      "Note": "This is a great consortium",
+      "Name": "David Kennedy",
+      "Time": "45855.71949074074"
+    },
+    "mappings": {
+      "Role": [],
+      "Expertise": [],
+      "Interest": []
+    }
+  },
+  {
+    "fields": {
+      "Role": "graduate student, DCAIC, supporting primarily AI/ML and data standards working groups",
+      "Expertise": "data analysis of high dimensional data, specifically dimensionality reduction, method development with synthetic validation, information theory",
+      "Interest": "Experimental design & data details across projects; custom softwares; analytical approaches and best practices",
+      "Note": "",
+      "Name": "Kailin Zhuang",
+      "Time": "45855.73806712963"
+    },
+    "mappings": {
+      "Role": [
+        {
+          "concept_label": null,
+          "ontology_id": null,
+          "ontology": null,
+          "confidence": null,
+          "explanation": null
+        }
+      ],
+      "Expertise": [
+        {
+          "concept_label": "Information Theory",
+          "ontology_id": "Wikidata:Q57459",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "The study of quantification, storage, and communication of information."
+        }
+      ],
+      "Interest": [
+        {
+          "concept_label": null,
+          "ontology_id": null,
+          "ontology": null,
+          "confidence": null,
+          "explanation": null
+        }
+      ]
+    }
+  },
+  {
+    "fields": {
+      "Role": "MEG, MRI, MRS, data acquisition, analysis. In humans. Mostly children. Often children with NDDs",
+      "Expertise": "",
+      "Interest": "",
+      "Note": "",
+      "Name": "Tim Roberts",
+      "Time": "45855.744050925925"
+    },
+    "mappings": {
+      "Role": [
+        {
+          "concept_label": "Magnetoencephalography",
+          "ontology_id": "UMLS:C0001387",
+          "ontology": "UMLS",
+          "confidence": 0.95,
+          "explanation": "A non-invasive neuroimaging technique that measures the magnetic fields produced by brain activity."
+        },
+        {
+          "concept_label": "Magnetic Resonance Imaging",
+          "ontology_id": "UMLS:C0022021",
+          "ontology": "UMLS",
+          "confidence": 0.95,
+          "explanation": "A medical imaging technique used to form pictures of the anatomy and the physiological processes of the body."
+        },
+        {
+          "concept_label": "Magnetic Resonance Spectroscopy",
+          "ontology_id": "UMLS:C0032699",
+          "ontology": "UMLS",
+          "confidence": 0.9,
+          "explanation": "A non-invasive imaging technique used to measure the concentration of certain metabolites in brain tissue."
+        },
+        {
+          "concept_label": "Data Acquisition",
+          "ontology_id": "UMLS:C0031396",
+          "ontology": "UMLS",
+          "confidence": 0.85,
+          "explanation": "The process of collecting data from various sources."
+        }
+      ],
+      "Expertise": [],
+      "Interest": []
+    }
+  },
+  {
+    "fields": {
+      "Role": "Pediatrics Research, Neuroimaging research (MEG), Vulnerable Populations",
+      "Expertise": "Psychometrics, standardized behavioral/cognitive measures, behavioral support protocols for participants",
+      "Interest": "Methods in computational neuroscience, EEG data acquisition and measurement workflows, multivariate statistics procedures for multimodal research, concepts in electrical engineering and computational neuroscience as they pertain to neuroimaging research",
+      "Note": "",
+      "Name": "Aditya Bhise",
+      "Time": "45855.74747685185"
+    },
+    "mappings": {
+      "Role": [
+        {
+          "concept_label": "Pediatrics",
+          "ontology_id": "Wikidata:Q16996",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "Field of medicine that involves the medical care of infants, children, and adolescents."
+        },
+        {
+          "concept_label": "Vulnerable population",
+          "ontology_id": "Wikidata:Q1656684",
+          "ontology": "Wikidata",
+          "confidence": 0.8,
+          "explanation": "Groups who are at a higher risk of experiencing harm or adversity."
+        }
+      ],
+      "Expertise": [
+        {
+          "concept_label": "Psychometrics",
+          "ontology_id": "Wikidata:Q135583",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "Field concerned with the theory and technique of psychological measurement."
+        },
+        {
+          "concept_label": "Standardized test",
+          "ontology_id": "Wikidata:Q868222",
+          "ontology": "Wikidata",
+          "confidence": 0.7,
+          "explanation": "Tests that are administered and scored in a consistent manner."
+        }
+      ],
+      "Interest": [
+        {
+          "concept_label": "Electroencephalography",
+          "ontology_id": "Wikidata:Q24970",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "Method to record electrical activity of the brain."
+        },
+        {
+          "concept_label": "Electrical engineering",
+          "ontology_id": "Wikidata:Q1886",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "Field of engineering that deals with the study and application of electricity."
+        }
+      ]
+    }
+  },
+  {
+    "fields": {
+      "Role": "Devices, Neural Interfaces, Hardware and Embedded Design, Human",
+      "Expertise": "Whatever I know",
+      "Interest": "",
+      "Note": "",
+      "Name": "Uros Topalovic",
+      "Time": "45855.756516203706"
+    },
+    "mappings": {
+      "Role": [
+        {
+          "concept_label": "Device",
+          "ontology_id": "Wikidata:Q1052511",
+          "ontology": "Wikidata",
+          "confidence": 0.8,
+          "explanation": "General category of devices."
+        },
+        {
+          "concept_label": "Neural Interface",
+          "ontology_id": "Wikidata:Q10543626",
+          "ontology": "Wikidata",
+          "confidence": 0.85,
+          "explanation": "Interfaces that allow interaction with neural systems."
+        },
+        {
+          "concept_label": "Human",
+          "ontology_id": "Wikidata:Q5",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "Human species."
+        }
+      ],
+      "Expertise": [
+        {
+          "concept_label": null,
+          "ontology_id": null,
+          "ontology": null,
+          "confidence": null,
+          "explanation": null
+        }
+      ],
+      "Interest": []
+    }
+  },
+  {
+    "fields": {
+      "Role": "Data Acquisition, mice, social behavior, spikegadgets",
+      "Expertise": "Data acquisition of HR, neural, and respiratory data in freely socially behaving mice",
+      "Interest": "",
+      "Note": "",
+      "Name": "Sequioa Smith",
+      "Time": "45855.75599537037"
+    },
+    "mappings": {
+      "Role": [
+        {
+          "concept_label": "Data Acquisition",
+          "ontology_id": "UMLS:C0031396",
+          "ontology": "UMLS",
+          "confidence": 0.85,
+          "explanation": "The process of collecting data from various sources."
+        },
+        {
+          "concept_label": "Data Acquisition",
+          "ontology_id": null,
+          "ontology": null,
+          "confidence": 0.8,
+          "explanation": "Field related to the collection of data for analysis"
+        },
+        {
+          "concept_label": "Mouse",
+          "ontology_id": "Wikidata:Q25189",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "Common laboratory animal used in research"
+        },
+        {
+          "concept_label": "Social Behavior",
+          "ontology_id": "UMLS:C0226743",
+          "ontology": "UMLS",
+          "confidence": 0.9,
+          "explanation": "Behavior that involves interaction among individuals of the same species"
+        }
+      ],
+      "Expertise": [],
+      "Interest": []
+    }
+  },
+  {
+    "fields": {
+      "Role": "NIH Program Officer",
+      "Expertise": "",
+      "Interest": "",
+      "Note": "",
+      "Name": "Dana Schloesser",
+      "Time": "45856.79157407407"
+    },
+    "mappings": {
+      "Role": [
+        {
+          "concept_label": null,
+          "ontology_id": null,
+          "ontology": null,
+          "confidence": null,
+          "explanation": null
+        }
+      ],
+      "Expertise": [],
+      "Interest": []
+    }
+  },
+  {
+    "fields": {
+      "Role": "neuroinformatics, machine learning, neuroimaging, signal processing, infrastructure",
+      "Expertise": "signal processing, machine learning, infrastructure",
+      "Interest": "ethics, governance, machine learning",
+      "Note": "",
+      "Name": "Satrajit Ghosh",
+      "Time": "45855.73793981481"
+    },
+    "mappings": {
+      "Role": [
+        {
+          "concept_label": "Neuroinformatics",
+          "ontology_id": "Wikidata:Q175019",
+          "ontology": "Wikidata",
+          "confidence": 0.8,
+          "explanation": "Field that uses computational approaches to understand the brain"
+        },
+        {
+          "concept_label": "Machine learning",
+          "ontology_id": "Wikidata:Q21803",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "Subfield of artificial intelligence"
+        },
+        {
+          "concept_label": "Neuroimaging",
+          "ontology_id": "Wikidata:Q85110",
+          "ontology": "Wikidata",
+          "confidence": 0.8,
+          "explanation": "Techniques to visualize the brain"
+        },
+        {
+          "concept_label": "Signal processing",
+          "ontology_id": "Wikidata:Q11790",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "Analysis of signals"
+        },
+        {
+          "concept_label": "Infrastructure",
+          "ontology_id": "Wikidata:Q2344413",
+          "ontology": "Wikidata",
+          "confidence": 0.7,
+          "explanation": "Fundamental facilities and systems serving a country, city, or area"
+        }
+      ],
+      "Expertise": [
+        {
+          "concept_label": "Signal processing",
+          "ontology_id": "Wikidata:Q11790",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "Analysis of signals"
+        },
+        {
+          "concept_label": "Machine learning",
+          "ontology_id": "Wikidata:Q21803",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "Subfield of artificial intelligence"
+        },
+        {
+          "concept_label": "Infrastructure",
+          "ontology_id": "Wikidata:Q2344413",
+          "ontology": "Wikidata",
+          "confidence": 0.7,
+          "explanation": "Fundamental facilities and systems serving a country, city, or area"
+        }
+      ],
+      "Interest": [
+        {
+          "concept_label": "Ethics",
+          "ontology_id": "Wikidata:Q1907",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "Moral principles that govern a person's behavior"
+        },
+        {
+          "concept_label": "Governance",
+          "ontology_id": "Wikidata:Q209218",
+          "ontology": "Wikidata",
+          "confidence": 0.8,
+          "explanation": "The action or manner of governing a state, organization, etc."
+        },
+        {
+          "concept_label": "Machine learning",
+          "ontology_id": "Wikidata:Q21803",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "Subfield of artificial intelligence"
+        }
+      ]
+    }
+  },
+  {
+    "fields": {
+      "Role": "Oversee the EMBER Data Archive",
+      "Expertise": "Data Ecosystems, Data Analysis, Data Sharing, Data Pipelines",
+      "Interest": "Data Acquisition (from various teams, to help)",
+      "Note": "",
+      "Name": "Brock Wester",
+      "Time": "45855.75269675926"
+    },
+    "mappings": {
+      "Role": [
+        {
+          "concept_label": null,
+          "ontology_id": null,
+          "ontology": null,
+          "confidence": null,
+          "explanation": null
+        }
+      ],
+      "Expertise": [
+        {
+          "concept_label": null,
+          "ontology_id": null,
+          "ontology": null,
+          "confidence": null,
+          "explanation": null
+        },
+        {
+          "concept_label": "Data Analysis",
+          "ontology_id": "Wikidata:Q31431",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "The process of inspecting, cleansing, transforming, and modeling data."
+        },
+        {
+          "concept_label": "Data analysis",
+          "ontology_id": "Wikidata:Q32888",
+          "ontology": "Wikidata",
+          "confidence": 0.8,
+          "explanation": "Process of inspecting, cleaning, and modeling data"
+        }
+      ],
+      "Interest": []
+    }
+  },
+  {
+    "fields": {
+      "Role": "computational cognitive neuroscience",
+      "Expertise": "data analysis, data management",
+      "Interest": "devices, design, data acquisition, animal work",
+      "Note": "",
+      "Name": "Yibei Chen",
+      "Time": "45863.10055555555"
+    },
+    "mappings": {
+      "Role": [
+        {
+          "concept_label": "Computational Neuroscience",
+          "ontology_id": "Wikidata:Q29582",
+          "ontology": "Wikidata",
+          "confidence": 0.8,
+          "explanation": "Field that uses computational approaches to understand the function of the brain."
+        }
+      ],
+      "Expertise": [
+        {
+          "concept_label": "Data Analysis",
+          "ontology_id": "Wikidata:Q31431",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "The process of inspecting, cleansing, transforming, and modeling data."
+        },
+        {
+          "concept_label": "Data analysis",
+          "ontology_id": "Wikidata:Q32888",
+          "ontology": "Wikidata",
+          "confidence": 0.8,
+          "explanation": "Process of inspecting, cleaning, and modeling data"
+        },
+        {
+          "concept_label": "Data Analysis",
+          "ontology_id": "Wikidata:Q205163",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "Process of systematically applying statistical and logical techniques to describe and evaluate data."
+        },
+        {
+          "concept_label": "Data Management",
+          "ontology_id": "Wikidata:Q224977",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "Development and execution of architectures, policies, practices, and procedures to manage the data lifecycle."
+        }
+      ],
+      "Interest": [
+        {
+          "concept_label": "Device",
+          "ontology_id": "Wikidata:Q27447",
+          "ontology": "Wikidata",
+          "confidence": 0.8,
+          "explanation": "Tool or instrument used for a particular purpose."
+        },
+        {
+          "concept_label": "Design",
+          "ontology_id": "Wikidata:Q22680",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "Process of generating solutions for problems, primarily visual and functional parameters."
+        },
+        {
+          "concept_label": "Data acquisition",
+          "ontology_id": "Wikidata:Q29634",
+          "ontology": "Wikidata",
+          "confidence": 0.85,
+          "explanation": "The process of obtaining data from various sources"
+        },
+        {
+          "concept_label": "Data Acquisition",
+          "ontology_id": "Wikidata:Q1153394",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "Process of collecting and measuring physical phenomena."
+        },
+        {
+          "concept_label": "Animal Testing",
+          "ontology_id": "Wikidata:Q28139",
+          "ontology": "Wikidata",
+          "confidence": 0.7,
+          "explanation": "Use of non-human animals in research."
+        }
+      ]
+    }
+  },
+  {
+    "fields": {
+      "Role": "I am working on the Capturing Autobiographical memory formation in People moving Through real-world spaces Using synchronized wearables and intracranial Recordings of EEG. My work includes: Data Analysis, Data Acquisition, Research Design, and Devices development",
+      "Expertise": "Device and Hardware design, Data Analysis particularly EEG/iEEG signal processing, Eye-tracking, fMRI, and Statistical Analysis in human",
+      "Interest": "Challenges in Device and Hardware design, and Data Analysis, Automated Video processing in human and animals",
+      "Note": "",
+      "Name": "Alireza Kazemi",
+      "Time": "45890.844375"
+    },
+    "mappings": {
+      "Role": [
+        {
+          "concept_label": "Data Acquisition",
+          "ontology_id": "UMLS:C0031396",
+          "ontology": "UMLS",
+          "confidence": 0.85,
+          "explanation": "The process of collecting data from various sources."
+        },
+        {
+          "concept_label": "Data Acquisition",
+          "ontology_id": null,
+          "ontology": null,
+          "confidence": 0.8,
+          "explanation": "Field related to the collection of data for analysis"
+        }
+      ],
+      "Expertise": [
+        {
+          "concept_label": "Eye Tracking",
+          "ontology_id": "Wikidata:Q159068",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "Technology used to measure eye positions and movements."
+        },
+        {
+          "concept_label": "Functional Magnetic Resonance Imaging",
+          "ontology_id": "UMLS:C0016211",
+          "ontology": "UMLS",
+          "confidence": 0.9,
+          "explanation": "A technique used to measure and map brain activity."
+        }
+      ],
+      "Interest": [
+        {
+          "concept_label": "Data Analysis",
+          "ontology_id": "Wikidata:Q35006968",
+          "ontology": "Wikidata",
+          "confidence": 0.85,
+          "explanation": "The process of inspecting, cleansing, transforming, and modeling data."
+        }
+      ]
+    }
+  },
+  {
+    "fields": {
+      "Role": "I work with Knowledge Graphs",
+      "Expertise": "Knowledge Graphs and its benefits",
+      "Interest": "Neuroscience",
+      "Note": "",
+      "Name": "Tek Raj Chhetri",
+      "Time": "45895.837858796294"
+    },
+    "mappings": {
+      "Role": [],
+      "Expertise": [
+        {
+          "concept_label": "Knowledge Graphs",
+          "ontology_id": null,
+          "ontology": null,
+          "confidence": 0.8,
+          "explanation": "A technology used to provide benefits in data management and retrieval."
+        }
+      ],
+      "Interest": [
+        {
+          "concept_label": "Neuroscience",
+          "ontology_id": "Wikidata:Q12132",
+          "ontology": "Wikidata",
+          "confidence": 0.9,
+          "explanation": "The scientific study of the nervous system."
+        }
+      ]
+    }
+  }
+]
