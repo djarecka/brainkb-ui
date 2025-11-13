@@ -95,6 +95,15 @@ export default function HMBATaxonomyPage() {
     setMousePos({ x: evt.clientX - rect.left, y: evt.clientY - rect.top });  // Convert to relative coordinates
   };
 
+  // Zoom controls - simple zoom in/out like double-click
+  const handleZoomIn = useCallback(() => {
+    setZoom(prevZoom => Math.min(prevZoom * 1.5, 3)); // Max zoom 3x
+  }, []);
+
+  const handleZoomOut = useCallback(() => {
+    setZoom(prevZoom => Math.max(prevZoom / 1.5, 0.05)); // Min zoom 0.05x (allows zooming out more)
+  }, []);
+
   // --- Fit to content ---
   const fitToContent = useCallback(() => {
     const cont = containerRef.current;
@@ -215,11 +224,16 @@ const renderCustomNode = ({ nodeDatum, toggleNode }: any) => {
 
         if (name.length <= maxLength) {
           // Single line for short names
+          // Position text below circle: circle radius (90) + spacing (20)
+          // Using absolute y position - zoom transform scales everything proportionally
+          const circleRadius = 90;
+          const textSpacing = 20;
           return (
             <text
               x={0}
-              dy={25 / zoom}
+              y={circleRadius + textSpacing}
               textAnchor="middle"
+              dominantBaseline="hanging"
               onClick={handleNameClick}
               onMouseEnter={() => setHoverNode(nodeDatum)}  // HOVER: Show tooltip when mouse enters text
               onMouseLeave={() => setHoverNode(null)}       // HOVER: Hide tooltip when mouse leaves text
@@ -266,12 +280,19 @@ const renderCustomNode = ({ nodeDatum, toggleNode }: any) => {
             line2 = name.substring(mid);
           }
 
+          // Position text below circle: circle radius (90) + spacing
+          // Using absolute y positions - zoom transform scales everything proportionally
+          const circleRadius = 90;
+          const textSpacing = 20;
+          const lineSpacing = 12;
+          const fontSize = 60; // Approximate font size for line spacing
           return (
             <>
               <text
                 x={0}
-                dy={20 / zoom}
+                y={circleRadius + textSpacing}
                 textAnchor="middle"
+                dominantBaseline="hanging"
                 onClick={handleNameClick}
                 onMouseEnter={() => setHoverNode(nodeDatum)}  // HOVER: Show tooltip when mouse enters text
                 onMouseLeave={() => setHoverNode(null)}       // HOVER: Hide tooltip when mouse leaves text
@@ -289,8 +310,9 @@ const renderCustomNode = ({ nodeDatum, toggleNode }: any) => {
               </text>
               <text
                 x={0}
-                dy={32 / zoom}
+                y={circleRadius + textSpacing + fontSize + lineSpacing}
                 textAnchor="middle"
+                dominantBaseline="hanging"
                 onClick={handleNameClick}
                 onMouseEnter={() => setHoverNode(nodeDatum)}  // HOVER: Show tooltip when mouse enters text
                 onMouseLeave={() => setHoverNode(null)}       // HOVER: Hide tooltip when mouse leaves text
@@ -416,20 +438,27 @@ const renderCustomNode = ({ nodeDatum, toggleNode }: any) => {
         />
       </div>
 
-      {/* FIT BUTTON - SEPARATE OVERLAY LAYER */}
-      {/* <div className="fixed inset-0 pointer-events-none z-[10000]">
-        <button
-          onClick={() => {
-            console.log('Fit button clicked!');
-            fitToContent();
-          }}
-          className="absolute top-28 right-5 pointer-events-auto rounded-md border border-blue-900 bg-blue-500 px-4 py-2 text-xs font-bold text-white shadow-lg transition hover:bg-blue-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-400"
-          aria-label="Fit the taxonomy tree to the available content area"
-          title="Fit to content"
-        >
-          Fit to Content
-        </button>
-      </div> */}
+      {/* Zoom Control Panel */}
+      <div className="fixed top-24 right-5 z-50 pt-20">
+        <div className="flex flex-col gap-2 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-lg border border-gray-300">
+          <button
+            onClick={handleZoomIn}
+            className="w-7 h-7 flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors font-bold text-lg"
+            title="Zoom In"
+            aria-label="Zoom In"
+          >
+            +
+          </button>
+          <button
+            onClick={handleZoomOut}
+            className="w-7 h-7 flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-colors font-bold text-lg"
+            title="Zoom Out"
+            aria-label="Zoom Out"
+          >
+            −
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
