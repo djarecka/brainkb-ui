@@ -194,7 +194,7 @@ const renderCustomNode = ({ nodeDatum, toggleNode }: any) => {
     >
     {/* Circle */}
     <circle
-      r={35}
+      r={90}
       fill={nodeDatum.nodeColor || 'lightgray'}
       stroke="#1f2937"
       strokeWidth={1.25}
@@ -411,13 +411,13 @@ const renderCustomNode = ({ nodeDatum, toggleNode }: any) => {
           zoom={zoom}
           renderCustomNodeElement={renderCustomNode}
           separation={{ siblings: 2.5, nonSiblings: 3.0 }}
-          nodeSize={{ x: 200, y: 500 }}
+          nodeSize={{ x: 300, y: 700 }}
           pathFunc={"curveStep" as any}
         />
       </div>
 
       {/* FIT BUTTON - SEPARATE OVERLAY LAYER */}
-      <div className="fixed inset-0 pointer-events-none z-[10000]">
+      {/* <div className="fixed inset-0 pointer-events-none z-[10000]">
         <button
           onClick={() => {
             console.log('Fit button clicked!');
@@ -429,7 +429,7 @@ const renderCustomNode = ({ nodeDatum, toggleNode }: any) => {
         >
           Fit to Content
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }
