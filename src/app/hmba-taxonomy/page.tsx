@@ -174,7 +174,7 @@ export default function HMBATaxonomyPage() {
 
   if (!data) return (
     <div className="p-4">
-      <div className="bg-red-600 text-white px-5 py-5 text-xl font-semibold">
+      <div className="bg-blue-600 text-white px-5 py-5 text-xl font-semibold">
         LOADING - DATA NOT READY
       </div>
     </div>
@@ -401,7 +401,18 @@ const renderCustomNode = ({ nodeDatum, toggleNode }: any) => {
 
   return (
     <div>
-      <div ref={containerRef} className="fixed inset-0 m-0 p-0 overflow-hidden">
+        <div className="container mx-auto px-4 py-6 space-y-6">
+        <div className="relative overflow-hidden bg-gradient-to-br from-sky-500 via-blue-500 to-emerald-500 rounded-2xl shadow-xl mb-8 pt-28">
+          <div className="absolute inset-0 bg-gradient-to-r from-sky-600/20 to-transparent"></div>
+          <div className="relative px-8 py-4">
+            <p className="text-sky-100 text-base leading-relaxed mb-2">
+              TODO: Visualize your knowledge graphs and uncover meaningful insights about nodes and relationships. Below is an example visualization generated from sample data, illustrating how the structure and connections come together.
+            </p>
+          </div>
+        </div>
+        </div>`
+
+      <div ref={containerRef} className="fixed inset-0 m-0 p-0 pt-24 overflow-hidden">
         {/* ⭐ global SVG crispness tweaks */}
         <style jsx global>{`
           .rd3t-svg {
@@ -433,13 +444,13 @@ const renderCustomNode = ({ nodeDatum, toggleNode }: any) => {
           zoom={zoom}
           renderCustomNodeElement={renderCustomNode}
           separation={{ siblings: 2.5, nonSiblings: 3.0 }}
-          nodeSize={{ x: 300, y: 700 }}
+          nodeSize={{ x: 220, y: 700 }}
           pathFunc={"curveStep" as any}
         />
       </div>
 
       {/* Zoom Control Panel */}
-      <div className="fixed top-24 right-5 z-50 pt-20">
+      <div className="fixed top-24 right-5 z-50 pt-48">
         <div className="flex flex-col gap-2 bg-white/90 backdrop-blur-sm rounded-lg p-2 shadow-lg border border-gray-300">
           <button
             onClick={handleZoomIn}
