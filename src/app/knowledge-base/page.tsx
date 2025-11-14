@@ -72,10 +72,29 @@ const KnowledgeBase = (
             setCurrentPage(1);
         }
 
+        // Column width configuration: map column index to desired width
+        // Example: { 1: '100px', 2: '150px' } sets column 2 to 100px and column 3 to 150px
+        const columnWidths: Record<number, string> = {
+            1: '100px',  // Second column (index 1)
+            // Add more columns as needed:
+            // 2: '150px',  // Third column (index 2)
+            // 3: '80px',   // Fourth column (index 3)
+        };
+
         return (
             <div className="overflow-hidden rounded-xl border border-gray-200 shadow-sm">
                 <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-left text-gray-700">
+                    <table className="w-full text-sm text-left text-gray-700" style={{ tableLayout: 'fixed' }}>
+                        <colgroup>
+                            {headers.map((header, index) => (
+                                <col 
+                                    key={index}
+                                    style={{ 
+                                        width: columnWidths[index] || undefined 
+                                    }}
+                                />
+                            ))}
+                        </colgroup>
                         <thead className="bg-gradient-to-r from-sky-50 to-blue-50 border-b border-gray-200">
                             <tr>
                                 {headers.map((header, index) => (
@@ -95,8 +114,17 @@ const KnowledgeBase = (
                                         const cellValue = item[header]?.value || '';
                                         const displayValue = cellValue ? cellValue.substring(cellValue.lastIndexOf('/') + 1) : '';
                                         
+                                        const columnWidth = columnWidths[headerIndex];
                                         return (
-                                            <td key={headerIndex} className="px-6 py-4 whitespace-nowrap">
+                                            <td 
+                                                key={headerIndex} 
+                                                className={`py-4 ${columnWidth ? 'px-2' : 'px-6'} whitespace-nowrap`}
+                                                style={columnWidth ? { 
+                                                    maxWidth: columnWidth, 
+                                                    overflow: 'hidden', 
+                                                    textOverflow: 'ellipsis' 
+                                                } : undefined}
+                                            >
                                                 {headerIndex === 0 ? (
                                                     <a 
                                                         href={`knowledge-base/${entityPageSlug}/${encodeURIComponent(cellValue)}`}
