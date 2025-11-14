@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
-import { on } from 'events';
+
+// Force dynamic rendering - this route fetches external data
+export const dynamic = 'force-dynamic';
 
 interface TokenResponse {
     access_token: string;
     token_type: string;
     expires_in: number;
-  }
+}
 
 async function getAuthToken(): Promise<string> {
     const jwtUser = process.env.NEXT_PUBLIC_JWT_USER;
@@ -40,60 +40,81 @@ async function getAuthToken(): Promise<string> {
       console.error('Failed to get JWT token:', error);
       throw new Error('Authentication failed');
     }
-  }
+}
 
-export async function GET(request: NextRequest) {
-    // Get authentication token
+async function fetchTaxonomyData() {
+    // Taxonomy tree is NOT cached - it's fetched fresh each time
+    // Individual taxonomy node queries (when users click) are cached via entity-query API
     try {
         const queryServiceUrl = process.env.NEXT_PUBLIC_API_QUERY_TAXONOMY_ENDPOINT;
         
-        if (!queryServiceUrl) {
-            return NextResponse.json(
-                { error: 'Query service URL not configured' },
-                { status: 500 }
-            );
+        if (!queryServiceUrl || queryServiceUrl.trim() === '') {
+            // If URL is not configured, return null (will be handled by the GET handler)
+            // Only log in development
+            if (process.env.NODE_ENV === 'development') {
+                console.warn('Query service URL not configured for taxonomy');
+            }
+            return null;
         }
 
         let authHeaders: Record<string, string> = {};
 
         try {
-        const token = await getAuthToken();
-        authHeaders['Authorization'] = `Bearer ${token}`;
+            const token = await getAuthToken();
+            authHeaders['Authorization'] = `Bearer ${token}`;
         } catch (error) {
-        console.warn('Failed to get bearer token, proceeding without authentication');
+            console.warn('Failed to get bearer token, proceeding without authentication');
         }
-
-        console.log('Making request to:', queryServiceUrl);
-        console.log('Headers:', authHeaders);
 
         // Forward the request to the query service
         const response = await fetch(queryServiceUrl, {
-        method: 'GET',
-        headers: authHeaders,
+            method: 'GET',
+            headers: authHeaders,
         });
 
         if (!response.ok) {
-        const errorData = await response.text();
-        console.error('Query service error:', errorData);
-        return NextResponse.json(
-            { error: 'Failed to upload file to query service' },
-            { status: response.status }
-        );
+            const errorData = await response.text();
+            console.error('Query service error:', errorData);
+            throw new Error(`Failed to fetch taxonomy data: ${response.statusText}`);
         }
 
         const result = await response.json();
-        console.log('Received taxonomy data:', result);
+        return result;
+    } catch (error) {
+        console.error('Unable to get taxonomy:', error);
+        throw error;
+    }
+}
+
+// No caching for taxonomy tree - fetch fresh each time
+// Individual node queries are cached when users click via entity-query API
+
+export async function GET(request: NextRequest) {
+    try {
+        // Fetch fresh data (no caching for taxonomy tree)
+        const data = await fetchTaxonomyData();
+        
+        // If data is null (e.g., during build with missing config), return appropriate response
+        if (data === null) {
+            return NextResponse.json({
+                success: false,
+                error: 'Query service URL not configured'
+            }, { status: 503 });
+        }
+        
         return NextResponse.json({
             success: true,
             message: 'Taxonomy successfully retrieved',
-            data: result
-          });
-      
-    } catch (error) {
-        console.error('Unable to get taxonomy:', error);
+            data: data
+        });
+    } catch (error: any) {
+        console.error('Error in HMBA taxonomy API:', error);
         return NextResponse.json(
-        { error: 'Internal server error' },
-        { status: 500 }
+            { 
+                success: false,
+                error: error.message || 'Internal server error' 
+            },
+            { status: 500 }
         );
     }
 
