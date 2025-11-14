@@ -61,7 +61,8 @@
 }
 .kb-page-margin{
     margin-top: 5rem;
-    margin-right: 6rem;
+    margin-right: 4rem;
+    margin-left: 3rem;
 }
 .fix-margin-left-footer{
     position: relative;

@@ -157,7 +157,7 @@ const KnowledgeBase = (
 
 
             {/* Hero Section */}
-            <div className="grid fix-left-margin grid-cols-1 mb-8">
+            <div className="grid grid-cols-1 mb-8">
                 <div className="relative overflow-hidden bg-gradient-to-br from-sky-500 via-blue-500 to-emerald-500 rounded-2xl shadow-xl">
                     <div className="absolute inset-0 bg-gradient-to-r from-sky-600/20 to-transparent"></div>
                     <div className="relative px-8 py-12">
@@ -174,7 +174,7 @@ const KnowledgeBase = (
             </div>
 
             {/* Content Section */}
-            <div className="grid fix-left-margin grid-cols-1">
+            <div className="grid grid-cols-1" >
                 {/* Search Bar */}
                 {!loading && !error && data.length > 0 && (
                     <div className="mb-6">
