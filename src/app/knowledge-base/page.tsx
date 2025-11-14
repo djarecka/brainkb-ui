@@ -23,11 +23,32 @@ const KnowledgeBase = (
     const [pagesubtitle, setSubPageTitle] = useState("");
     const [entityPageSlug, setEntityPageSlug] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
+    const [categoryFilter, setCategoryFilter] = useState<string>("");
+    const [categoryColumnIndex, setCategoryColumnIndex] = useState<number | null>(null);
 
     const fetchData = async () => {
         setLoading(true);
         setError(null);
-        
+
+        setData([]);
+        setHeaders([]);
+        setPageTitle("");
+        setSubPageTitle("");
+        setEntityPageSlug("");
+        setCategoryColumnIndex(null);
+        const page = yaml.pages.find((page) => page.slug === "default");
+        const query_to_execute = page ? page.sparql_query : "";
+        const entitypage = page ? page.entitypageslug : "";
+        setEntityPageSlug(entitypage);
+        const page_title = page ? page.page : "";
+        const page_sub_title = page ? page.description : "";
+        const filter_index = page ? page.column_filter_index : null;
+        setPageTitle(page_title);
+        setSubPageTitle(page_sub_title);
+        setCategoryColumnIndex(filter_index);
+
+        const queryParameter = {sparql_query: query_to_execute};
+
         try {
             // Fetch from API route which handles server-side caching
             const response = await fetch('/api/knowledge-base?slug=default');
@@ -54,8 +75,29 @@ const KnowledgeBase = (
         fetchData();
     }, []);
 
-    // Calculate filtered data for pagination
-    const filteredData = useFilteredTableData(data, headers, searchQuery);
+    // Get unique category values from the specified column
+    const categoryOptions = categoryColumnIndex !== null && headers[categoryColumnIndex] 
+        ? Array.from(new Set(
+            data
+                .map(item => {
+                    const value = item[headers[categoryColumnIndex]]?.value || '';
+                    return value ? value.substring(value.lastIndexOf('/') + 1) : '';
+                })
+                .filter(v => v !== '')
+        )).sort()
+        : [];
+
+    // Calculate filtered data for pagination (combines text search and category filter)
+    const textFilteredData = useFilteredTableData(data, headers, searchQuery);
+    
+    // Apply category filter if set
+    const filteredData = categoryFilter && categoryColumnIndex !== null && headers[categoryColumnIndex]
+        ? textFilteredData.filter((item: any) => {
+            const value = item[headers[categoryColumnIndex]]?.value || '';
+            const displayValue = value ? value.substring(value.lastIndexOf('/') + 1) : '';
+            return displayValue === categoryFilter;
+        })
+        : textFilteredData;
     
     const totalPages = Math.ceil(filteredData.length / ITEMS_PER_PAGE);
 
@@ -75,7 +117,7 @@ const KnowledgeBase = (
         // Column width configuration: map column index to desired width
         // Example: { 1: '100px', 2: '150px' } sets column 2 to 100px and column 3 to 150px
         const columnWidths: Record<number, string> = {
-            1: '100px',  // Second column (index 1)
+            1: '160px',  // Second column (index 1)
             // Add more columns as needed:
             // 2: '150px',  // Third column (index 2)
             // 3: '80px',   // Fourth column (index 3)
@@ -175,27 +217,66 @@ const KnowledgeBase = (
 
             {/* Content Section */}
             <div className="grid grid-cols-1" >
-                {/* Search Bar */}
+                {/* Search Bar and Category Filter */}
                 {!loading && !error && data.length > 0 && (
-                    <div className="mb-6">
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <Search className="h-5 w-5 text-gray-400" />
+                    <div className="mb-6 space-y-4">
+                        <div className="flex gap-4 flex-col sm:flex-row">
+                            {/* Text Search */}
+                            <div className="relative flex-1">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <Search className="h-5 w-5 text-gray-400" />
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Search across all columns..."
+                                    value={searchQuery}
+                                    onChange={(e) => {
+                                        setSearchQuery(e.target.value);
+                                        setCurrentPage(1);
+                                    }}
+                                    className="block w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-sm"
+                                />
                             </div>
-                            <input
-                                type="text"
-                                placeholder="Search across all columns..."
-                                value={searchQuery}
-                                onChange={(e) => {
-                                    setSearchQuery(e.target.value);
-                                    setCurrentPage(1);
-                                }}
-                                className="block w-full pl-11 pr-4 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-sm"
-                            />
+                            
+                            {/* Category Filter Dropdown */}
+                            {categoryColumnIndex !== null && headers[categoryColumnIndex] && categoryOptions.length > 0 && (
+                                <div className="sm:w-64">
+                                    <select
+                                        value={categoryFilter}
+                                        onChange={(e) => {
+                                            setCategoryFilter(e.target.value);
+                                            setCurrentPage(1);
+                                        }}
+                                        className="block w-full px-4 py-3 border border-gray-300 rounded-lg leading-5 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-sky-500 text-sm"
+                                    >
+                                        <option value="">All {headers[categoryColumnIndex]}</option>
+                                        {categoryOptions.map((option, idx) => (
+                                            <option key={idx} value={option}>
+                                                {option}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                            )}
                         </div>
-                        {searchQuery.trim() !== "" && (
-                            <p className="mt-2 text-sm text-gray-600">
+                        
+                        {(searchQuery.trim() !== "" || categoryFilter !== "") && (
+                            <p className="text-sm text-gray-600">
                                 Showing {filteredData.length} of {data.length} results
+                                {categoryFilter && (
+                                    <span className="ml-2">
+                                        (filtered by: {' '}
+                                        <a 
+                                            href={`https://brain-bican.github.io/models/${categoryFilter.replace(/^bican:/, '')}/`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="font-semibold text-sky-600 hover:text-sky-700 underline"
+                                        >
+                                            {categoryFilter}
+                                        </a>
+                                        )
+                                    </span>
+                                )}
                             </p>
                         )}
                     </div>
