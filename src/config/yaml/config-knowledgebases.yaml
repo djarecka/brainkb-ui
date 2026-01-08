@@ -60,3 +60,19 @@ pages:
       }
     default_kb: false
 
+  - page: "Genome Annotation"
+    title: "Genome Annotation"
+    description: "Genome annotation data. TODO: add description."
+    slug: "genome"
+    sparql_query: |-
+        PREFIX biolink: <https://w3id.org/biolink/vocab/>
+        PREFIX xsd: <http://www.w3.org/2001/XMLSchema>
+        PREFIX bican: <https://identifiers.org/brain-bican/vocab/>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        SELECT DISTINCT ?entity ?label WHERE {
+        GRAPH <https://test-upload.com/> {
+        ?entity biolink:category "bican:GenomeAnnotation"^^<http://www.w3.org/2001/XMLSchema#anyURI>;
+        rdfs:label ?label.
+        }}
+    default_kb: false
+    #display_column_first: "entity"
