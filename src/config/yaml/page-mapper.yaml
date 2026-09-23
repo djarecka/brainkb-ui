@@ -15,20 +15,4 @@ PageMapper:
   - type: "detail"
     slug: "celltaxon"
     filename: "celltaxon-detail.yaml"
- 
-  - type: "list"
-    slug: "ner"
-    filename: "ner-list.yaml"
-  
-  - type: "detail"
-    slug: "ner"
-    filename: "ner-detail.yaml"
-
-  - type: "list"
-    slug: "resources"
-    filename: "resources-list.yaml"
-  
-  - type: "detail"
-    slug: "resources"
-    filename: "resources-detail.yaml"
 
