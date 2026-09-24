@@ -4,21 +4,18 @@ import "./globals.css";
 import { getServerSession } from "next-auth";
 import SessionProvider from "./components/auth/SessionProvider";
 import SessionExpiryWatcher from "./components/auth/SessionExpiryWatcher";
-import Footer from "./Footer";
 import dynamic from "next/dynamic"; // Required for Client Component import
 // Dynamically import the BrainKB Assistant client component
 // import BrainKBAssistantClient from "./components/assistant/BrainKBAssistantClient";
 import BrainKBAssistantWrapper from "./components/assistant/BrainKBAssistantClient";
 import AssistantInitializer from "./components/assistant/AssistantInitializer";
-// Site-wide bkb design tokens (cream background, --bkb-* CSS vars, and the
-// Tailwind → bkb overrides scoped by .bkb in globals.css).
-import { Theme } from "./components/design-system";
 // TanStack Query client — used by SynthScholar (and any future page that wants
 // react-query primitives). Mounted high so all client subtrees share one cache.
 import QueryProvider from "./components/synth-scholar/QueryProvider";
 
-// Dynamically import the ConditionalNavbar (client component)
-const ConditionalNavbar = dynamic(() => import("./components/layout/ConditionalNavbar"), { ssr: false });
+// Dynamically import SiteChrome (client component — decides Navbar/Footer vs.
+// standalone marketing pages based on route; see its own doc comment)
+const SiteChrome = dynamic(() => import("./components/layout/SiteChrome"), { ssr: false });
 // Dynamically import the CookieConsentBanner (client component)
 const CookieConsentBanner = dynamic(() => import("./components/layout/CookieConsent"), { ssr: false
 });
@@ -68,19 +65,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               every feature reporting its own "please sign in" failure. */}
           <SessionExpiryWatcher/>
           <QueryProvider>
-              <header>
-                  <ConditionalNavbar/>
-              </header>
-              {/* Wrap every page in <Theme> so the bkb design tokens, cream
-                  background, and Tailwind → bkb CSS overrides (scoped by .bkb in
-                  globals.css) apply to every route — about, privacy, contact,
-                  resources, knowledge-base, dashboards, admin, etc. */}
-              <Theme theme="light" style={{ background: "#f0eee9" }}>
-                  <main className="flex min-h-screen flex-col pt-16">{children}</main>
-              </Theme>
-              <footer>
-                  <Footer/>
-              </footer>
+              <SiteChrome>{children}</SiteChrome>
           </QueryProvider>
       </SessionProvider>
       {/*<div className="assistant">*/}
