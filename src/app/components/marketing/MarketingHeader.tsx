@@ -13,7 +13,6 @@ const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/mcp", label: "Use with AI" },
   { href: "/explore", label: "Explore" },
-  { href: "https://docs.brainkb.org", label: "Docs", external: true },
 ];
 
 export default function MarketingHeader() {
@@ -69,8 +68,6 @@ export default function MarketingHeader() {
               <Link
                 key={link.href}
                 href={link.href}
-                target={link.external ? "_blank" : undefined}
-                rel={link.external ? "noopener noreferrer" : undefined}
                 style={{ color: active ? COLORS.accent : COLORS.ink }}
               >
                 {link.label}
