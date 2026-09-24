@@ -166,11 +166,11 @@ export default function HomePage() {
       >
         <div style={{ flex: "1 1 300px", display: "flex", flexDirection: "column", gap: 22 }}>
           <h2 style={{ margin: 0, font: "400 clamp(40px,4.6vw,60px)/1 var(--font-instrument-serif), serif", letterSpacing: "-.01em", color: COLORS.accent }}>
-            See what the graph connects.
+            Explore the data and the connections.
           </h2>
           <p style={{ margin: 0, maxWidth: 480, color: COLORS.body, fontSize: 16, lineHeight: 1.55 }}>
-            Browse cell types, brain regions, datasets and papers, and follow the links between them. Data is
-            drawn from archives like BICAN, DANDI and NeMO.
+            Browse cell types, brain regions, datasets and papers, all organized as a knowledge graph so
+            you can follow the links between them.
           </p>
           <Link
             href="/explore"
