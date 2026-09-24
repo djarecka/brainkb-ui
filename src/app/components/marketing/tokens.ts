@@ -12,7 +12,11 @@ export const COLORS = {
   border: "#dcd6c9",
   borderStrong: "#bdb6a6",
   bandDivider: "#d3ccbd",
+  // Trying a two-color split: accent stays green for eyebrows/links/active
+  // states, secondaryAction is the trial color for CTA button backgrounds
+  // (was solid `ink` black).
   accent: "#1f6f5c",
+  secondaryAction: "#30ab8e",
   chipBg: "#e1ece6",
   cellTypes: "#1f6f5c",
   regions: "#5b6fb3",

@@ -1,8 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { plexSans, plexMono } from "./fonts";
+import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import SignInButtons from "@/src/app/components/auth/SignInButtons";
+import { instrumentSerif, plexSans, plexMono } from "./fonts";
 import { COLORS } from "./tokens";
 
 const NAV_LINKS = [
@@ -13,10 +17,17 @@ const NAV_LINKS = [
 
 export default function MarketingHeader() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { data: session } = useSession();
+
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    router.push("/");
+  };
 
   return (
     <header
-      className={`${plexSans.variable} ${plexMono.variable}`}
+      className={`${instrumentSerif.variable} ${plexSans.variable} ${plexMono.variable}`}
       style={{
         position: "sticky",
         top: 0,
@@ -39,19 +50,14 @@ export default function MarketingHeader() {
         }}
       >
         <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <Image src="/brainkb_logo.png" alt="BrainKB Logo" width={28} height={28} style={{ height: 28, width: "auto" }} priority />
           <span
             style={{
-              width: 22,
-              height: 22,
-              borderRadius: "50%",
-              border: `1.5px solid ${COLORS.ink}`,
-              display: "grid",
-              placeItems: "center",
+              font: "400 20px var(--font-instrument-serif), serif",
+              letterSpacing: "-.01em",
+              color: COLORS.ink,
             }}
           >
-            <span style={{ width: 8, height: 8, borderRadius: "50%", background: COLORS.accent }} />
-          </span>
-          <span style={{ font: "500 17px var(--font-plex-sans)", letterSpacing: "-.01em", color: COLORS.ink }}>
             BrainKB
           </span>
         </Link>
@@ -86,6 +92,29 @@ export default function MarketingHeader() {
           >
             GitHub ↗
           </a>
+          {session ? (
+            <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
+              <Link href="/user/dashboard" style={{ color: COLORS.ink }}>
+                {session.user?.name || session.user?.email}
+              </Link>
+              <button
+                onClick={handleLogout}
+                style={{
+                  font: "500 13px var(--font-plex-mono)",
+                  padding: "7px 12px",
+                  border: `1px solid ${COLORS.borderStrong}`,
+                  borderRadius: 999,
+                  background: "transparent",
+                  color: COLORS.ink,
+                  cursor: "pointer",
+                }}
+              >
+                Sign out
+              </button>
+            </div>
+          ) : (
+            <SignInButtons />
+          )}
         </nav>
       </div>
     </header>

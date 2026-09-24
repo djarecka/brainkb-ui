@@ -1,145 +1,118 @@
-"use client";
-
 /**
- * /mcp — how to drive BrainKB from an AI assistant via the Model Context
- * Protocol (MCP) server. Editorial style consistent with the About/landing
- * pages (FONTS + --bkb-* tokens + .bkb-card + .home-pad).
+ * MCP & Skills — public marketing page. Visual template matches Home/Explore
+ * (design_handoff_brainkb_site/README.md); content is the real MCP server
+ * details (previously on this same route, in the old editorial style) —
+ * not the design handoff's placeholder skill cards.
  */
 
-import { FONTS } from "@/src/app/components/design-system";
+import MarketingHeader from "../components/marketing/MarketingHeader";
+import MarketingFooter from "../components/marketing/MarketingFooter";
+import InstallCard from "../components/marketing/InstallCard";
+import { instrumentSerif, plexSans, plexMono } from "../components/marketing/fonts";
+import { COLORS, MCP_ENDPOINT } from "../components/marketing/tokens";
 
-const MCP_URL = "https://mcp.brainkb.org/mcp";
-
-function Eyebrow({ children }: { children: React.ReactNode }) {
-  return (
-    <div
-      style={{
-        fontFamily: FONTS.mono,
-        fontSize: 12,
-        letterSpacing: "0.18em",
-        textTransform: "uppercase",
-        color: "var(--bkb-accent)",
-        fontWeight: 600,
-        marginBottom: 18,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-function Card({ children }: { children: React.ReactNode }) {
-  return (
-    <div
-      className="bkb-card"
-      style={{ padding: 28, borderRadius: 16, background: "var(--bkb-surfaceAlt)", height: "100%" }}
-    >
-      {children}
-    </div>
-  );
-}
-
-function Code({ children }: { children: React.ReactNode }) {
-  return (
-    <pre
-      style={{
-        fontFamily: FONTS.mono,
-        fontSize: 13,
-        lineHeight: 1.6,
-        background: "var(--bkb-surface)",
-        border: "1px solid var(--bkb-border)",
-        borderRadius: 10,
-        padding: "14px 16px",
-        overflowX: "auto",
-        margin: "10px 0 0",
-        color: "var(--bkb-text)",
-      }}
-    >
-      <code>{children}</code>
-    </pre>
-  );
-}
-
-const CAPABILITIES: { h: string; d: string }[] = [
-  { h: "Spaces & graphs", d: "Create private/team workspaces, register named graphs, manage members and access." },
-  { h: "Ingest", d: "Load RDF (Turtle / N-Triples / JSON-LD) — raw text or files up to ~5 GB — as background jobs." },
-  { h: "Read & search", d: "Access-filtered full-text search, read a space's RDF, list registered graphs." },
-  { h: "Provenance (PROV-O)", d: "Per-job provenance, a graph's change history, and the exact triples each ingest added." },
-  { h: "Personal Access Tokens", d: "Mint a browser-free token to authenticate the assistant, then revoke it any time." },
-  { h: "Admin (if authorized)", d: "Manage users, roles, capabilities, and per-space access rules." },
-];
+const CAPABILITIES = [
+  { name: "Spaces & graphs", desc: "Create private/team workspaces, register named graphs, manage members and access." },
+  { name: "Ingest", desc: "Load RDF (Turtle / N-Triples / JSON-LD) — raw text or files up to ~5 GB — as background jobs." },
+  { name: "Read & search", desc: "Access-filtered full-text search, read a space's RDF, list registered graphs." },
+  { name: "Provenance (PROV-O)", desc: "Per-job provenance, a graph's change history, and the exact triples each ingest added." },
+  { name: "Personal Access Tokens", desc: "Mint a browser-free token to authenticate the assistant, then revoke it any time." },
+  { name: "Admin (if authorized)", desc: "Manage users, roles, capabilities, and per-space access rules." },
+] as const;
 
 export default function McpPage() {
   return (
-    <main className="home-pad" style={{ padding: "72px 64px", maxWidth: 1100, margin: "0 auto" }}>
-      <Eyebrow>AI access · Model Context Protocol</Eyebrow>
-      <h1 style={{ fontFamily: FONTS.display, fontSize: 44, letterSpacing: "-0.02em", lineHeight: 1.05, margin: "0 0 18px", color: "var(--bkb-text)" }}>
-        Use BrainKB from your AI assistant
-      </h1>
-      <p style={{ fontSize: 17, lineHeight: 1.7, color: "var(--bkb-textMuted)", maxWidth: 720, margin: "0 0 40px" }}>
-        BrainKB exposes an <strong>MCP server</strong> so an assistant can operate the knowledge
-        graph <em>on your behalf</em>: ingest data, search, explore provenance, and manage spaces,
-        using your own account and permissions. <strong>Two ways to use it</strong> — point any MCP
-        client (Claude, etc.) at the server directly, or use the <strong>BrainKB skill</strong>,
-        which runs on the <em>same</em> MCP and adds guided, step-by-step workflows. Every action is
-        access-controlled server-side exactly as in this web app. For example, just ask:{" "}
-        <em>“Ingest my TTL into the hmba space, then show what changed.”</em>
-      </p>
+    <div
+      className={`${instrumentSerif.variable} ${plexSans.variable} ${plexMono.variable}`}
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        background: COLORS.pageBg,
+        color: COLORS.ink,
+        fontFamily: "var(--font-plex-sans), system-ui, sans-serif",
+      }}
+    >
+      <MarketingHeader />
 
-      <div className="home-3col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 22, marginBottom: 40 }}>
-        <Card>
-          <div style={{ fontFamily: FONTS.display, fontSize: 20, color: "var(--bkb-text)", marginBottom: 6 }}>Connect</div>
-          <p style={{ fontSize: 14, color: "var(--bkb-textMuted)", lineHeight: 1.6, margin: 0 }}>
-            Add the hosted MCP endpoint to your client (e.g. Claude Code):
-          </p>
-          <Code>{`claude mcp add --transport http \\
-  brainkb ${MCP_URL}`}</Code>
-          <p style={{ fontSize: 13, color: "var(--bkb-textMuted)", lineHeight: 1.6, marginTop: 12 }}>
-            Registry id <code style={{ fontFamily: FONTS.mono }}>org.brainkb/brainkb</code>, transport
-            streamable-http. Prefer guided workflows? The <strong>BrainKB skill</strong> wraps these
-            same tools with step-by-step guidance in Claude Code.
-          </p>
-        </Card>
-        <Card>
-          <div style={{ fontFamily: FONTS.display, fontSize: 20, color: "var(--bkb-text)", marginBottom: 6 }}>Authenticate</div>
-          <p style={{ fontSize: 14, color: "var(--bkb-textMuted)", lineHeight: 1.6, margin: 0 }}>
-            Sign in once, mint a <strong>Personal Access Token</strong>, and send it with each request:
-          </p>
-          <Code>{`Authorization: Bearer brainkb_pat_…`}</Code>
-          <p style={{ fontSize: 13, color: "var(--bkb-textMuted)", lineHeight: 1.6, marginTop: 12 }}>
-            In the skill: <code style={{ fontFamily: FONTS.mono }}>brainkb_create_token()</code> after a
-            one-time Globus login, then set it as <code style={{ fontFamily: FONTS.mono }}>BRAINKB_TOKEN</code>.
-            Tokens are revocable and expire on inactivity.
-          </p>
-        </Card>
-      </div>
-
-      <Eyebrow>What the assistant can do</Eyebrow>
-      <div className="home-3col" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 22, marginBottom: 44 }}>
-        {CAPABILITIES.map((c) => (
-          <Card key={c.h}>
-            <div style={{ fontFamily: FONTS.display, fontSize: 17, color: "var(--bkb-text)", marginBottom: 8 }}>{c.h}</div>
-            <div style={{ fontSize: 14, color: "var(--bkb-textMuted)", lineHeight: 1.6 }}>{c.d}</div>
-          </Card>
-        ))}
-      </div>
-
-      <div
+      {/* Setup */}
+      <section
         style={{
-          padding: "18px 20px",
-          borderRadius: 12,
-          background: "var(--bkb-surfaceAlt)",
-          border: "1px solid var(--bkb-border)",
-          fontSize: 14,
-          color: "var(--bkb-textMuted)",
-          lineHeight: 1.65,
+          maxWidth: 1200,
+          margin: "0 auto",
+          padding: "80px 28px 72px",
+          width: "100%",
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,440px),1fr))",
+          gap: 56,
         }}
       >
-        The assistant acts as <strong>you</strong> — it can only see and change what your roles and
-        space membership permit, and a <code style={{ fontFamily: FONTS.mono }}>403</code> means a
-        permission is missing, not a broken token. Full tool reference and examples:{" "}
-        <a href="http://docs.brainkb.org" style={{ color: "var(--bkb-accent)" }}>docs.brainkb.org</a>.
-      </div>
-    </main>
+        <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
+          <div style={{ font: "500 12px var(--font-plex-mono)", letterSpacing: ".08em", textTransform: "uppercase", color: COLORS.accent }}>
+            AI access · Model Context Protocol
+          </div>
+          <h1 style={{ margin: 0, font: "400 clamp(44px,5.6vw,72px)/1 var(--font-instrument-serif), serif", letterSpacing: "-.02em" }}>
+            The BrainKB MCP server.
+          </h1>
+          <p style={{ margin: 0, color: COLORS.body, fontSize: 17, lineHeight: 1.65 }}>
+            BrainKB exposes an MCP server so an assistant can operate the knowledge graph on your
+            behalf: ingest data, search, explore provenance, and manage spaces, using your own account
+            and permissions. Every action is access-controlled server-side exactly as in this web app —
+            a <code>403</code> means a permission is missing, not a broken token.
+          </p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            <span style={{ font: "500 12px var(--font-plex-mono)", color: COLORS.muted }}>Endpoint</span>
+            <code
+              style={{
+                font: "400 14px var(--font-plex-mono)",
+                background: COLORS.cardBg,
+                border: `1px solid ${COLORS.border}`,
+                borderRadius: 8,
+                padding: "10px 14px",
+                width: "fit-content",
+              }}
+            >
+              {MCP_ENDPOINT}
+            </code>
+          </div>
+          <p style={{ margin: 0, color: COLORS.muted, fontSize: 14, lineHeight: 1.6 }}>
+            Sign in once, mint a Personal Access Token (<code>brainkb_create_token()</code> after a
+            one-time Globus login), and send it with each request as{" "}
+            <code>Authorization: Bearer brainkb_pat_…</code>. Tokens are revocable and expire on
+            inactivity.
+          </p>
+        </div>
+        <InstallCard />
+      </section>
+
+      {/* Capabilities */}
+      <section style={{ background: COLORS.bandBg, padding: "80px 28px 96px" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", flexDirection: "column", gap: 32 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 16 }}>
+            <div>
+              <div style={{ font: "500 12px var(--font-plex-mono)", letterSpacing: ".08em", textTransform: "uppercase", color: COLORS.accent, marginBottom: 12 }}>
+                What the assistant can do
+              </div>
+              <h2 style={{ margin: 0, font: "400 clamp(36px,4vw,52px)/1.1 var(--font-instrument-serif), serif" }}>
+                Workflows built on the graph.
+              </h2>
+            </div>
+            <a href="https://docs.brainkb.org" style={{ fontSize: 15, fontWeight: 500, color: COLORS.ink }}>
+              Full tool reference ↗
+            </a>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 16 }}>
+            {CAPABILITIES.map((c) => (
+              <div key={c.name} style={{ background: COLORS.cardBg, border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: 28 }}>
+                <div style={{ font: "400 22px/1.1 var(--font-instrument-serif), serif", marginBottom: 10 }}>{c.name}</div>
+                <p style={{ margin: 0, fontSize: 14, color: COLORS.body, lineHeight: 1.6 }}>{c.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <MarketingFooter />
+    </div>
   );
 }

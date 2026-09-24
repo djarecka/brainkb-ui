@@ -56,14 +56,16 @@ export default function HomePage() {
           Brain knowledge, <em style={{ color: COLORS.accent, fontStyle: "italic" }}>connected as a graph.</em>
         </h1>
         <p style={{ margin: 0, fontSize: 18, lineHeight: 1.55, color: COLORS.body, maxWidth: 600 }}>
-          BrainKB links cell types, brain regions, datasets and literature into one knowledge graph. Plug it
-          into your AI assistant over MCP, or browse the graph yourself.
+          Trustworthy knowledge-graph infrastructure that integrates fragmented neuroscience literature,
+          data and evidence — linking cell types, brain regions, datasets and papers so researchers can make
+          reproducible discoveries and funders can identify and invest in high-impact science. Plug it into
+          your AI assistant over MCP, or browse the graph yourself.
         </p>
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
           <a
             href="#connect"
             style={{
-              background: COLORS.ink,
+              background: COLORS.secondaryAction,
               color: COLORS.pageBg,
               padding: "14px 22px",
               borderRadius: 999,
@@ -77,13 +79,13 @@ export default function HomePage() {
           <a
             href="#explore"
             style={{
+              background: COLORS.secondaryAction,
+              color: COLORS.pageBg,
               padding: "14px 22px",
               borderRadius: 999,
               fontWeight: 500,
               fontSize: 15,
-              border: `1px solid ${COLORS.borderStrong}`,
               whiteSpace: "nowrap",
-              color: COLORS.ink,
             }}
           >
             Explore the graph ↓
@@ -135,7 +137,16 @@ export default function HomePage() {
             </div>
             <Link
               href="/mcp"
-              style={{ alignSelf: "flex-start", fontSize: 15, fontWeight: 500, borderBottom: "1px solid currentColor", paddingBottom: 2, color: COLORS.ink }}
+              style={{
+                alignSelf: "flex-start",
+                background: COLORS.secondaryAction,
+                color: COLORS.pageBg,
+                padding: "14px 22px",
+                borderRadius: 999,
+                fontWeight: 500,
+                fontSize: 15,
+                whiteSpace: "nowrap",
+              }}
             >
               MCP details and all skills →
             </Link>
@@ -164,7 +175,7 @@ export default function HomePage() {
             href="/explore"
             style={{
               alignSelf: "flex-start",
-              background: COLORS.ink,
+              background: COLORS.secondaryAction,
               color: COLORS.pageBg,
               padding: "14px 22px",
               borderRadius: 999,
