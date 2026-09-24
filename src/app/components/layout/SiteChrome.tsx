@@ -1,16 +1,19 @@
 "use client";
 
 /**
- * Decides whether a route gets the app-wide Navbar/Footer/Theme chrome, or
- * renders standalone. The public marketing pages (Home, MCP & Skills,
- * Explore — see design_handoff_brainkb_site/README.md) have their own
- * self-contained header/footer/design tokens and deliberately skip the rest
- * of the site's chrome; every other route keeps the original Navbar/Footer.
+ * Site-wide chrome: the new MarketingHeader/MarketingFooter (see
+ * design_handoff_brainkb_site/README.md) wrap every route, including the
+ * logged-in app area (dashboard, admin, tools). The public marketing pages
+ * (Home, MCP & Skills, Explore) are fully standalone — they render their own
+ * copies of the header/footer directly and skip this wrapper's <Theme>/<main>
+ * entirely. Every other route keeps <Theme> (its --bkb-* CSS tokens are still
+ * load-bearing for existing page content/styling) with the new header/footer
+ * in place of the old Navbar/Footer.
  */
 
 import { usePathname } from "next/navigation";
-import Navbar from "./Navbar";
-import Footer from "@/src/app/Footer";
+import MarketingHeader from "../marketing/MarketingHeader";
+import MarketingFooter from "../marketing/MarketingFooter";
 import { Theme } from "@/src/app/components/design-system";
 
 const MARKETING_ROUTES = new Set(["/", "/mcp", "/explore"]);
@@ -24,15 +27,14 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
 
   return (
     <>
-      <header>
-        <Navbar />
-      </header>
+      <MarketingHeader />
+      {/* No pt-16 spacer here: MarketingHeader is `position: sticky` (in
+          document flow), unlike the old Navbar's `position: fixed`, which
+          needed that padding to keep from covering page content. */}
       <Theme theme="light" style={{ background: "#f0eee9" }}>
-        <main className="flex min-h-screen flex-col pt-16">{children}</main>
+        <main className="flex min-h-screen flex-col">{children}</main>
       </Theme>
-      <footer>
-        <Footer />
-      </footer>
+      <MarketingFooter />
     </>
   );
 }
