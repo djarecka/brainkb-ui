@@ -7,21 +7,25 @@
  */
 
 import { useState } from "react";
-import Link from "next/link";
 import MarketingHeader from "../components/marketing/MarketingHeader";
 import MarketingFooter from "../components/marketing/MarketingFooter";
 import { instrumentSerif, plexSans, plexMono } from "../components/marketing/fonts";
 import { COLORS } from "../components/marketing/tokens";
 
 const TYPES = [
-  { name: "Cell types", color: COLORS.cellTypes, desc: "Taxonomies and cell-type definitions with markers and regions.", sources: "BICAN" },
-  { name: "Brain regions", color: COLORS.regions, desc: "Anatomical regions and atlases, linked to cell types and data.", sources: "BICAN · atlases" },
-  { name: "Datasets", color: COLORS.datasets, desc: "Recordings and omics datasets, pointing back to their archive.", sources: "DANDI · NeMO" },
-  { name: "Literature", color: COLORS.literature, desc: "Claims extracted from papers, each linked to its source.", sources: "Papers" },
+  { name: "Cell types", color: COLORS.accent, desc: "Taxonomies and cell-type definitions with markers and regions.", sources: "BICAN", programs: ["BICAN"] },
+  { name: "Brain regions", color: COLORS.accent, desc: "Anatomical regions and atlases, linked to cell types and data.", sources: "BICAN", programs: ["BICAN"] },
+  { name: "BICAN Resources", color: COLORS.accent, desc: "All resources published by the BICAN consortium.", sources: "BICAN", programs: ["BICAN"] },
+  { name: "BBQS Resources", color: COLORS.accent, desc: "All resources published by the BBQS consortium.", sources: "BBQS", programs: ["BBQS"] },
+  { name: "Literature", color: COLORS.accent, desc: "Claims extracted from papers, each linked to its source.", sources: "BICAN · BBQS", programs: ["BICAN", "BBQS"] },
 ] as const;
+
+const PROGRAMS = ["All", "BICAN", "BBQS"] as const;
 
 export default function ExplorePage() {
   const [selectedType, setSelectedType] = useState<string>(TYPES[0].name);
+  const [activeProgram, setActiveProgram] = useState<(typeof PROGRAMS)[number]>("All");
+  const visibleTypes = TYPES.filter((t) => activeProgram === "All" || (t.programs as readonly string[]).includes(activeProgram));
 
   return (
     <div
@@ -49,20 +53,42 @@ export default function ExplorePage() {
         }}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-          <Link href="/" style={{ font: "500 13px var(--font-plex-mono)", color: COLORS.muted }}>
-            ← Home
-          </Link>
-          <h1 style={{ margin: 0, font: "400 clamp(44px,5.6vw,72px)/1 var(--font-instrument-serif), serif", letterSpacing: "-.02em" }}>
+          <h1 style={{ margin: 0, font: "400 clamp(34px,4.2vw,52px)/1.05 var(--font-instrument-serif), serif", letterSpacing: "-.02em", color: COLORS.accent }}>
             Explore the graph.
           </h1>
           <p style={{ margin: 0, maxWidth: 580, color: COLORS.body, fontSize: 17, lineHeight: 1.55 }}>
-            BrainKB points to data held by archives like BICAN, DANDI and NeMO. Pick a type of data to see
-            what&apos;s indexed.
+            BrainKB points to data from programs like BICAN and BBQS.
           </p>
+          <span style={{ fontSize: 13, fontStyle: "italic", color: COLORS.muted }}>
+            TODO: each card will lead to a separate website
+          </span>
+        </div>
+
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          {PROGRAMS.map((p) => {
+            const active = p === activeProgram;
+            return (
+              <button
+                key={p}
+                onClick={() => setActiveProgram(p)}
+                style={{
+                  background: active ? COLORS.ink : COLORS.cardBg,
+                  color: active ? COLORS.pageBg : COLORS.body,
+                  border: `1px solid ${active ? COLORS.ink : COLORS.border}`,
+                  borderRadius: 999,
+                  padding: "8px 16px",
+                  font: "500 13px var(--font-plex-mono)",
+                  cursor: "pointer",
+                }}
+              >
+                {p}
+              </button>
+            );
+          })}
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,260px),1fr))", gap: 16 }}>
-          {TYPES.map((t) => {
+          {visibleTypes.map((t) => {
             const active = t.name === selectedType;
             return (
               <button

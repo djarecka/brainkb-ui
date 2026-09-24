@@ -7,9 +7,11 @@ import { COLORS } from "./tokens";
 interface InstallCardProps {
   /** Home shows a "then ask" example prompt below the code box; the MCP page doesn't. */
   showThenAsk?: boolean;
+  /** MCP page shows a short authentication note below the card. */
+  authNote?: boolean;
 }
 
-export default function InstallCard({ showThenAsk = false }: InstallCardProps) {
+export default function InstallCard({ showThenAsk = false, authNote = false }: InstallCardProps) {
   const [clientName, setClientName] = useState<string>(MCP_CLIENTS[0].name);
   const [copied, setCopied] = useState(false);
   const client = MCP_CLIENTS.find((c) => c.name === clientName) ?? MCP_CLIENTS[0];
@@ -25,6 +27,7 @@ export default function InstallCard({ showThenAsk = false }: InstallCardProps) {
   };
 
   return (
+    <div>
     <div
       style={{
         background: COLORS.cardBg,
@@ -35,7 +38,7 @@ export default function InstallCard({ showThenAsk = false }: InstallCardProps) {
         boxShadow: "0 30px 60px -36px rgba(22,24,26,.25)",
       }}
     >
-      <div style={{ display: "flex", gap: 4, padding: "10px 10px 0", borderBottom: `1px solid ${COLORS.border}`, flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: 3, padding: "16px 16px 0", borderBottom: `1px solid ${COLORS.border}`, flexWrap: "wrap" }}>
         {MCP_CLIENTS.map((c) => {
           const active = c.name === client.name;
           return (
@@ -51,8 +54,8 @@ export default function InstallCard({ showThenAsk = false }: InstallCardProps) {
                 border: `1px solid ${active ? COLORS.border : "transparent"}`,
                 borderBottom: "none",
                 borderRadius: "7px 7px 0 0",
-                padding: "9px 14px",
-                font: "500 12.5px var(--font-plex-mono, monospace)",
+                padding: "8px 13px",
+                font: "500 12px var(--font-plex-mono, monospace)",
                 cursor: "pointer",
                 marginBottom: -1,
               }}
@@ -67,7 +70,7 @@ export default function InstallCard({ showThenAsk = false }: InstallCardProps) {
       </div>
       <div
         style={{
-          margin: "0 22px",
+          margin: showThenAsk ? "0 22px" : "0 22px 22px",
           padding: "16px 18px",
           background: COLORS.pageBg,
           border: `1px solid ${COLORS.border}`,
@@ -113,6 +116,14 @@ export default function InstallCard({ showThenAsk = false }: InstallCardProps) {
           </div>
         </div>
       )}
+    </div>
+    {authNote && (
+      <p style={{ margin: "14px 4px 0", color: COLORS.muted, fontSize: 13, lineHeight: 1.6 }}>
+        Sign in once, mint a Personal Access Token (<code>brainkb_create_token()</code> after a
+        one-time Globus login), and send it with each request as{" "}
+        <code>Authorization: Bearer brainkb_pat_…</code>. Tokens are revocable and expire on inactivity.
+      </p>
+    )}
     </div>
   );
 }

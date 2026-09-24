@@ -48,17 +48,17 @@ export default function McpPage() {
         }}
       >
         <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
-          <div style={{ font: "500 12px var(--font-plex-mono)", letterSpacing: ".08em", textTransform: "uppercase", color: COLORS.accent }}>
-            AI access · Model Context Protocol
-          </div>
-          <h1 style={{ margin: 0, font: "400 clamp(44px,5.6vw,72px)/1 var(--font-instrument-serif), serif", letterSpacing: "-.02em" }}>
+          <h1 style={{ margin: 0, font: "400 clamp(34px,4.2vw,52px)/1.05 var(--font-instrument-serif), serif", letterSpacing: "-.02em", color: COLORS.accent }}>
             The BrainKB MCP server.
           </h1>
           <p style={{ margin: 0, color: COLORS.body, fontSize: 17, lineHeight: 1.65 }}>
             BrainKB exposes an MCP server so an assistant can operate the knowledge graph on your
             behalf: ingest data, search, explore provenance, and manage spaces, using your own account
-            and permissions. Every action is access-controlled server-side exactly as in this web app —
-            a <code>403</code> means a permission is missing, not a broken token.
+            and permissions.
+          </p>
+          <p style={{ margin: 0, color: COLORS.muted, fontSize: 14, lineHeight: 1.6 }}>
+            Every action is access-controlled server-side exactly as in this web app — a{" "}
+            <code>403</code> means a permission is missing, not a broken token.
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
             <span style={{ font: "500 12px var(--font-plex-mono)", color: COLORS.muted }}>Endpoint</span>
@@ -75,14 +75,8 @@ export default function McpPage() {
               {MCP_ENDPOINT}
             </code>
           </div>
-          <p style={{ margin: 0, color: COLORS.muted, fontSize: 14, lineHeight: 1.6 }}>
-            Sign in once, mint a Personal Access Token (<code>brainkb_create_token()</code> after a
-            one-time Globus login), and send it with each request as{" "}
-            <code>Authorization: Bearer brainkb_pat_…</code>. Tokens are revocable and expire on
-            inactivity.
-          </p>
         </div>
-        <InstallCard />
+        <InstallCard authNote />
       </section>
 
       {/* Capabilities */}
@@ -90,16 +84,13 @@ export default function McpPage() {
         <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", flexDirection: "column", gap: 32 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", flexWrap: "wrap", gap: 16 }}>
             <div>
-              <div style={{ font: "500 12px var(--font-plex-mono)", letterSpacing: ".08em", textTransform: "uppercase", color: COLORS.accent, marginBottom: 12 }}>
-                What the assistant can do
-              </div>
-              <h2 style={{ margin: 0, font: "400 clamp(36px,4vw,52px)/1.1 var(--font-instrument-serif), serif" }}>
-                Workflows built on the graph.
+              <h2 style={{ margin: 0, font: "400 clamp(36px,4vw,52px)/1.1 var(--font-instrument-serif), serif", color: COLORS.accent }}>
+                What your assistant can do.
               </h2>
             </div>
-            <a href="https://docs.brainkb.org" style={{ fontSize: 15, fontWeight: 500, color: COLORS.ink }}>
-              Full tool reference ↗
-            </a>
+            <span style={{ fontSize: 13, fontStyle: "italic", color: COLORS.muted }}>
+              TODO: we should provide more description and links to the skills
+            </span>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))", gap: 16 }}>
             {CAPABILITIES.map((c) => (

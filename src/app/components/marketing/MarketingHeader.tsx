@@ -10,7 +10,8 @@ import { instrumentSerif, plexSans, plexMono } from "./fonts";
 import { COLORS } from "./tokens";
 
 const NAV_LINKS = [
-  { href: "/mcp", label: "MCP & Skills" },
+  { href: "/", label: "Home" },
+  { href: "/mcp", label: "Use with AI" },
   { href: "/explore", label: "Explore" },
   { href: "https://docs.brainkb.org", label: "Docs", external: true },
 ];
@@ -76,22 +77,6 @@ export default function MarketingHeader() {
               </Link>
             );
           })}
-          <a
-            href="https://github.com/sensein/brainkb"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              font: "500 13px var(--font-plex-mono)",
-              padding: "7px 12px",
-              border: `1px solid ${COLORS.ink}`,
-              borderRadius: 999,
-              whiteSpace: "nowrap",
-              flex: "none",
-              color: COLORS.ink,
-            }}
-          >
-            GitHub ↗
-          </a>
           {session ? (
             <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
               <Link href="/user/dashboard" style={{ color: COLORS.ink }}>

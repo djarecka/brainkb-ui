@@ -12,6 +12,7 @@ import MarketingHeader from "./components/marketing/MarketingHeader";
 import MarketingFooter from "./components/marketing/MarketingFooter";
 import InstallCard from "./components/marketing/InstallCard";
 import PlaceholderGraph from "./components/marketing/PlaceholderGraph";
+import { FloatingGraph } from "./components/design-system/BkbHero";
 import { instrumentSerif, plexSans, plexMono } from "./components/marketing/fonts";
 import { COLORS } from "./components/marketing/tokens";
 
@@ -38,58 +39,63 @@ export default function HomePage() {
           padding: "96px 28px 88px",
           width: "100%",
           display: "flex",
-          flexDirection: "column",
-          gap: 28,
+          flexWrap: "wrap",
+          gap: 48,
         }}
       >
-        <div style={{ font: "500 12px var(--font-plex-mono)", letterSpacing: ".08em", textTransform: "uppercase", color: COLORS.accent }}>
-          Neuroscience knowledge graph
+        <div style={{ flex: "1 1 460px", display: "flex", flexDirection: "column", gap: 28 }}>
+          <h1
+            style={{
+              margin: 0,
+              maxWidth: 900,
+              font: "400 clamp(48px,6.4vw,84px)/.98 var(--font-instrument-serif), serif",
+              letterSpacing: "-.02em",
+            }}
+          >
+            The open
+            <br />
+            <em style={{ color: COLORS.accent, fontStyle: "italic" }}>neuroscience</em>
+            <br />
+            knowledge graph.
+          </h1>
+          <p style={{ margin: 0, fontSize: 18, lineHeight: 1.55, color: COLORS.body, maxWidth: 600 }}>
+            Trustworthy knowledge-graph infrastructure that integrates fragmented neuroscience literature,
+            data, and evidence — enabling researchers to make reproducible discoveries and helping funders
+            identify, evaluate, and invest in high-impact science.
+          </p>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            <a
+              href="#connect"
+              style={{
+                background: COLORS.secondaryAction,
+                color: COLORS.pageBg,
+                padding: "14px 22px",
+                borderRadius: 999,
+                fontWeight: 500,
+                fontSize: 15,
+                whiteSpace: "nowrap",
+              }}
+            >
+              Connect via MCP ↓
+            </a>
+            <a
+              href="#explore"
+              style={{
+                background: COLORS.secondaryAction,
+                color: COLORS.pageBg,
+                padding: "14px 22px",
+                borderRadius: 999,
+                fontWeight: 500,
+                fontSize: 15,
+                whiteSpace: "nowrap",
+              }}
+            >
+              Explore the graph ↓
+            </a>
+          </div>
         </div>
-        <h1
-          style={{
-            margin: 0,
-            maxWidth: 900,
-            font: "400 clamp(48px,6.4vw,84px)/.98 var(--font-instrument-serif), serif",
-            letterSpacing: "-.02em",
-          }}
-        >
-          Brain knowledge, <em style={{ color: COLORS.accent, fontStyle: "italic" }}>connected as a graph.</em>
-        </h1>
-        <p style={{ margin: 0, fontSize: 18, lineHeight: 1.55, color: COLORS.body, maxWidth: 600 }}>
-          Trustworthy knowledge-graph infrastructure that integrates fragmented neuroscience literature,
-          data and evidence — linking cell types, brain regions, datasets and papers so researchers can make
-          reproducible discoveries and funders can identify and invest in high-impact science. Plug it into
-          your AI assistant over MCP, or browse the graph yourself.
-        </p>
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-          <a
-            href="#connect"
-            style={{
-              background: COLORS.secondaryAction,
-              color: COLORS.pageBg,
-              padding: "14px 22px",
-              borderRadius: 999,
-              fontWeight: 500,
-              fontSize: 15,
-              whiteSpace: "nowrap",
-            }}
-          >
-            Connect via MCP ↓
-          </a>
-          <a
-            href="#explore"
-            style={{
-              background: COLORS.secondaryAction,
-              color: COLORS.pageBg,
-              padding: "14px 22px",
-              borderRadius: 999,
-              fontWeight: 500,
-              fontSize: 15,
-              whiteSpace: "nowrap",
-            }}
-          >
-            Explore the graph ↓
-          </a>
+        <div style={{ flex: "1 1 520px", maxWidth: 720 }}>
+          <FloatingGraph />
         </div>
       </section>
 
@@ -110,15 +116,13 @@ export default function HomePage() {
           }}
         >
           <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
-            <div style={{ font: "500 12px var(--font-plex-mono)", letterSpacing: ".08em", textTransform: "uppercase", color: COLORS.accent }}>
-              01 · Connect
-            </div>
-            <h2 style={{ margin: 0, font: "400 clamp(40px,4.6vw,60px)/1 var(--font-instrument-serif), serif", letterSpacing: "-.01em" }}>
-              Ask your assistant. It queries the graph.
+            <h2 style={{ margin: 0, font: "400 clamp(40px,4.6vw,60px)/1 var(--font-instrument-serif), serif", letterSpacing: "-.01em", color: COLORS.accent }}>
+              Use your AI assistant with BrainKB data.
             </h2>
             <p style={{ margin: 0, maxWidth: 480, color: COLORS.body, fontSize: 16, lineHeight: 1.55 }}>
-              Add the BrainKB MCP server to Claude, Cursor or any MCP client with one command. Answers come
-              back linked to their sources.
+              Add the BrainKB MCP server to Claude, Cursor, or any MCP client with one command. Then just
+              ask — ingest data, search the graph, or explore what&apos;s connected, all in natural
+              language, as yourself and under your own permissions.
             </p>
             <div
               style={{
@@ -148,7 +152,7 @@ export default function HomePage() {
                 whiteSpace: "nowrap",
               }}
             >
-              MCP details and all skills →
+              See how to use with AI →
             </Link>
           </div>
           <InstallCard showThenAsk />
@@ -161,10 +165,7 @@ export default function HomePage() {
         style={{ maxWidth: 1200, margin: "0 auto", padding: "96px 28px 104px", width: "100%", display: "flex", flexWrap: "wrap", gap: 48, alignItems: "center" }}
       >
         <div style={{ flex: "1 1 300px", display: "flex", flexDirection: "column", gap: 22 }}>
-          <div style={{ font: "500 12px var(--font-plex-mono)", letterSpacing: ".08em", textTransform: "uppercase", color: COLORS.accent }}>
-            02 · Explore
-          </div>
-          <h2 style={{ margin: 0, font: "400 clamp(40px,4.6vw,60px)/1 var(--font-instrument-serif), serif", letterSpacing: "-.01em" }}>
+          <h2 style={{ margin: 0, font: "400 clamp(40px,4.6vw,60px)/1 var(--font-instrument-serif), serif", letterSpacing: "-.01em", color: COLORS.accent }}>
             See what the graph connects.
           </h2>
           <p style={{ margin: 0, maxWidth: 480, color: COLORS.body, fontSize: 16, lineHeight: 1.55 }}>
