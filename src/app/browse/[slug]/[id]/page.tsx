@@ -26,6 +26,7 @@
 
 import { Suspense, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { runStoredQuery } from "../../stored";
 import { notFound, useParams, useSearchParams } from "next/navigation";
 import { Loader2, AlertCircle } from "lucide-react";
 import MarketingHeader from "../../../components/marketing/MarketingHeader";
@@ -49,6 +50,9 @@ type PageConfig = {
   // mapped_cluster). Those links open the cluster's cell type on /taxonomy
   // (its most specific taxon with an accession id) instead of a record here.
   taxonomyLinks?: string[];
+  // Use the query service's stored queries (see ../../queries.ts), so
+  // signed-out visitors can read a graph too large for the space fallback.
+  storedQueries?: boolean;
 };
 
 // The most specific named taxon of each cluster: the parent with an accession
@@ -241,6 +245,10 @@ function DetailView({ page, id }: { page: PageConfig; id: string }) {
         .replace(/\{\{localId\}\}/g, localId)
         .replace(/\{\{base\}\}/g, base)
         .replace(/\{\{id\}\}/g, id);
+      if (page.storedQueries) {
+        setRows(await runStoredQuery("browse.detail", { graph, id }));
+        return;
+      }
       const response = await fetch("/api/knowledge-base", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -257,7 +265,7 @@ function DetailView({ page, id }: { page: PageConfig; id: string }) {
     } finally {
       setLoading(false);
     }
-  }, [graph, template, id, page.slug]);
+  }, [graph, template, id, page.slug, page.storedQueries]);
 
   useEffect(() => {
     load();
@@ -275,16 +283,20 @@ function DetailView({ page, id }: { page: PageConfig; id: string }) {
     if (clusters.length === 0) return;
     let cancelled = false;
     const sparqlQuery = CLUSTER_TAXON_QUERY.replace("{{clusters}}", clusters.map((c) => `<${c}>`).join(" "));
-    fetch("/api/knowledge-base", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ slug: `cluster-taxa-${page.slug}-${id}`, sparqlQuery }),
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (cancelled || json?.success === false) return;
+    const lookup: Promise<Record<string, Term>[]> = page.storedQueries
+      ? runStoredQuery("browse.cluster_taxa", { graph, clusters: clusters.join(" ") })
+      : fetch("/api/knowledge-base", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ slug: `cluster-taxa-${page.slug}-${id}`, sparqlQuery }),
+        })
+          .then((res) => res.json())
+          .then((json) => (json?.success === false ? [] : json.data ?? []));
+    lookup
+      .then((data) => {
+        if (cancelled) return;
         const best = new Map<string, { taxon: string; order: number }>();
-        for (const b of (json.data ?? []) as Record<string, Term>[]) {
+        for (const b of data) {
           const cluster = b.cluster?.value, taxon = b.taxon?.value, order = Number(b.order?.value ?? -1);
           if (!cluster || !taxon) continue;
           const cur = best.get(cluster);
@@ -294,7 +306,7 @@ function DetailView({ page, id }: { page: PageConfig; id: string }) {
       })
       .catch(() => {}); // no taxon found: the link stays a plain record link
     return () => { cancelled = true; };
-  }, [rows, page.taxonomyLinks, page.slug, id]);
+  }, [rows, page.taxonomyLinks, page.slug, page.storedQueries, graph, id]);
   const hrefOf = (target: string) =>
     taxonOf.has(target)
       ? taxonomyHref(taxonOf.get(target)!)

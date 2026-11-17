@@ -411,7 +411,11 @@ pages:
   # data, biolink:category is an IRI here and entities link by IRI.
   - slug: "patchseq"
     title: "Patch-seq"
-    graph: "https://brainkb.org/patchseq-sample/"
+    graph: "https://brainkb.org/graph/bican-basal-ganglia/"
+    # Stored queries (src/app/browse/queries.ts): the graph is too large for
+    # the signed-out space fallback, so this lets visitors browse without
+    # signing in.
+    storedQueries: true
     model: null
     # A mapping's cluster links to its cell type on /taxonomy.
     taxonomyLinks:
@@ -452,22 +456,6 @@ pages:
         label: "Name"
       - key: "description"
         label: "Description"
-    queryTemplate: |-
-      PREFIX biolink: <https://w3id.org/biolink/vocab/>
-      PREFIX dct: <http://purl.org/dc/terms/>
-      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-
-      SELECT ?id (SAMPLE(?label) AS ?name) (SAMPLE(?desc) AS ?description)
-      WHERE {
-        GRAPH <{{graph}}> {
-          ?id biolink:category <{{category}}> .
-          OPTIONAL { ?id rdfs:label ?label }
-          OPTIONAL { ?id dct:description ?desc }
-        }
-      }
-      GROUP BY ?id
-      ORDER BY ?name ?id
-      LIMIT 500
     classes:
       - name: "PatchedCell"
         category: "https://identifiers.org/brain-bican/vocab/PatchedCell"

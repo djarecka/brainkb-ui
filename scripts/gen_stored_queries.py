@@ -1,5 +1,5 @@
-"""Generate BrainKB query_service/core/stored_queries.py from the /taxonomy and
-/literature queries.ts files, so the stored queries the pages call match them.
+"""Generate BrainKB query_service/core/stored_queries.py from the /taxonomy,
+/literature and /browse queries.ts files, so the stored queries the pages call match them.
 
 usage: python scripts/gen_stored_queries.py <brainkb-ui dir> <BrainKB>/query_service/core/stored_queries.py
 """
@@ -22,9 +22,12 @@ NAMES = {  # UI export -> stored name, and the parameters it takes besides graph
  ("literature", "ENTITIES_QUERY"): ("literature.entities", {}),
  ("literature", "TARGETS_QUERY"): ("literature.targets", {}),
  ("literature", "DETAIL_QUERY"): ("literature.mentions", {"entity": "iri"}),
+ ("browse", "ENTITIES_QUERY"): ("browse.entities", {"category": "iri"}),
+ ("browse", "DETAIL_QUERY"): ("browse.detail", {"id": "iri"}),
+ ("browse", "CLUSTER_TAXA_QUERY"): ("browse.cluster_taxa", {"clusters": "iri_list"}),
 }
 entries = []
-for page in ["taxonomy", "literature"]:
+for page in ["taxonomy", "literature", "browse"]:
     ts = open(f"{ui}/src/app/{page}/queries.ts").read()
     pre = re.search(r"const PREFIXES = `(.*?)`", ts, re.S).group(1)
     lim = dict(re.findall(r"(\w+): (\d+)", re.search(r"export const LIMITS = \{(.*?)\}", ts, re.S).group(1)))
@@ -51,7 +54,7 @@ with open(out, "w") as f:
 Stored (named) SPARQL queries that anyone allowed to read a space may run
 against that space's graph, without the admin-only arbitrary-SPARQL endpoint.
 
-Each entry is a fixed query from the BrainKB UI (/taxonomy, /literature).
+Each entry is a fixed query from the BrainKB UI (/taxonomy, /literature, /browse).
 Callers choose the query by name and supply only:
   graph     -- a named graph that belongs to a space (checked for read access)
   and the parameters the query declares, each validated before substitution:
@@ -60,7 +63,7 @@ Callers choose the query by name and supply only:
 Every query ends in a LIMIT; `limit` is that cap, so callers can tell when a
 result was cut off.
 
-Generated from brainkb-ui src/app/{taxonomy,literature}/queries.ts; keep the two
+Generated from brainkb-ui src/app/{taxonomy,literature,browse}/queries.ts; keep the two
 in step when a page's query changes.
 """
 

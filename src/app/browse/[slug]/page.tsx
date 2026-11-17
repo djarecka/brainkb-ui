@@ -24,6 +24,7 @@ import { COLORS, CARD_SURFACE } from "../../components/marketing/tokens";
 import ModelFigure, { type ModelEdge } from "../ModelFigure";
 import FilterMenu, { type FilterOption } from "../FilterMenu";
 import browserConfig from "@/src/config/yaml/class-browser.yaml";
+import { runStoredQuery } from "../stored";
 import "../browse.css";
 
 // `queryTemplate` on a class overrides the page's, which overrides defaults —
@@ -46,6 +47,10 @@ type PageConfig = {
   graph?: string;
   columns?: Column[];
   queryTemplate?: string;
+  // Run the page's queries as the query service's stored queries
+  // (browse.entities / browse.detail in ../queries.ts), so signed-out visitors
+  // can read a graph too large for the space fallback. queryTemplate is then unused.
+  storedQueries?: boolean;
   // Diagnostic-style pages put raw IRIs in the id column, where shortening
   // and linking would mangle them.
   linkIds?: boolean;
@@ -149,6 +154,10 @@ function BrowseView({ page }: { page: PageConfig }) {
       setLoading(true);
       setError(null);
       try {
+        if (page.storedQueries) {
+          setRows(await runStoredQuery("browse.entities", { graph, category: entry.category }));
+          return;
+        }
         const sparqlQuery = (entry.queryTemplate ?? queryTemplate)
           .replace(/\{\{graph\}\}/g, graph)
           .replace(/\{\{category\}\}/g, entry.category);
@@ -169,7 +178,7 @@ function BrowseView({ page }: { page: PageConfig }) {
         setLoading(false);
       }
     },
-    [graph, queryTemplate, page.slug],
+    [graph, queryTemplate, page.slug, page.storedQueries],
   );
 
   useEffect(() => {
