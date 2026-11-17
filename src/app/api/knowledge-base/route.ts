@@ -33,6 +33,21 @@ const CACHE_DURATION = 24 * 60 * 60;
 
 // Execute SPARQL query server-side (to avoid CORS issues)
 async function executeQuery(sparqlQuery: string) {
+    // Local preview only: DEV_SPARQL_ENDPOINT points at a plain SPARQL endpoint
+    // (e.g. a local Oxigraph with sample data), skipping the query service and
+    // its sign-in. Ignored in production builds.
+    const devEndpoint = process.env.NODE_ENV !== 'production' ? process.env.DEV_SPARQL_ENDPOINT : undefined;
+    if (devEndpoint) {
+        const res = await fetch(devEndpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/sparql-query', 'Accept': 'application/sparql-results+json' },
+            body: sparqlQuery,
+        });
+        if (!res.ok) throw new Error(`DEV_SPARQL_ENDPOINT: ${res.status} ${await res.text()}`);
+        const json = await res.json();
+        return { data: json.results?.bindings ?? [], headers: json.head?.vars ?? [] };
+    }
+
     const queryParameter = { sparql_query: sparqlQuery };
     const endpoint = env.get('NEXT_PUBLIC_API_QUERY_ENDPOINT') || "query/sparql";
 
