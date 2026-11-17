@@ -42,6 +42,7 @@ async function executeQuery(sparqlQuery: string) {
             method: 'POST',
             headers: { 'Content-Type': 'application/sparql-query', 'Accept': 'application/sparql-results+json' },
             body: sparqlQuery,
+            cache: 'no-store',
         });
         if (!res.ok) throw new Error(`DEV_SPARQL_ENDPOINT: ${res.status} ${await res.text()}`);
         const json = await res.json();
