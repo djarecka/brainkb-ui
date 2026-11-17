@@ -403,3 +403,111 @@ pages:
         category: "brainkb:Organization"
         noun: ["organization", "organizations"]
         description: "Institutes and consortia that provide resources."
+
+  # Patch-seq: patched cells with their donor, library and files, the ephys
+  # and morphology feature sets computed from them, and each cell's mapping
+  # to a taxonomy cluster. Draft model (models/patchseq/model_sheet), so no
+  # model link; the figure comes from modelEdges. Unlike the BICAN library
+  # data, biolink:category is an IRI here and entities link by IRI.
+  - slug: "patchseq"
+    title: "Patch-seq"
+    graph: "https://brainkb.org/patchseq-sample/"
+    model: null
+    # A mapping's cluster links to its cell type on /taxonomy.
+    taxonomyLinks:
+      - "https://identifiers.org/brain-bican/vocab/mapped_cluster"
+    # The links present in patchseq_sample.ttl (class -> class).
+    modelEdges:
+      - { from: "PatchedCell", to: "Donor", label: "wasDerivedFrom" }
+      - { from: "BarcodedCellSample", to: "PatchedCell", label: "wasDerivedFrom" }
+      - { from: "LibraryAliquot", to: "BarcodedCellSample", label: "wasDerivedFrom" }
+      - { from: "DigitalAsset", to: "LibraryAliquot", label: "wasDerivedFrom" }
+      - { from: "PatchClampEphysRecording", to: "PatchedCell", label: "wasDerivedFrom" }
+      - { from: "ImageStack", to: "PatchedCell", label: "wasDerivedFrom" }
+      - { from: "NeuronReconstruction", to: "ImageStack", label: "wasDerivedFrom" }
+      - { from: "LongSquareFeatureSet", to: "PatchClampEphysRecording", label: "wasDerivedFrom" }
+      - { from: "ShortSquareFeatureSet", to: "PatchClampEphysRecording", label: "wasDerivedFrom" }
+      - { from: "RampFeatureSet", to: "PatchClampEphysRecording", label: "wasDerivedFrom" }
+      - { from: "ChirpFeatureSet", to: "PatchClampEphysRecording", label: "wasDerivedFrom" }
+      - { from: "MorphologyFeatureSet", to: "NeuronReconstruction", label: "wasDerivedFrom" }
+      - { from: "LongSquareFeatureSet", to: "PatchedCell", label: "about" }
+      - { from: "ShortSquareFeatureSet", to: "PatchedCell", label: "about" }
+      - { from: "RampFeatureSet", to: "PatchedCell", label: "about" }
+      - { from: "ChirpFeatureSet", to: "PatchedCell", label: "about" }
+      - { from: "MorphologyFeatureSet", to: "PatchedCell", label: "about" }
+      - { from: "CellTypeMapping", to: "PatchedCell", label: "about" }
+      - { from: "LongSquareFeatureSet", to: "StimulusSet", label: "stimulus_set" }
+      - { from: "ShortSquareFeatureSet", to: "StimulusSet", label: "stimulus_set" }
+      - { from: "RampFeatureSet", to: "StimulusSet", label: "stimulus_set" }
+      - { from: "ChirpFeatureSet", to: "StimulusSet", label: "stimulus_set" }
+      - { from: "StimulusSet", to: "StimulusProtocol", label: "stimulus_protocols" }
+    description: >-
+      Patch-seq cells from the basal ganglia: each cell with its donor, its
+      sequencing library and files, its electrophysiology and morphology
+      features, and the taxonomy cluster it maps to.
+    columns:
+      - key: "id"
+        label: "ID"
+      - key: "name"
+        label: "Name"
+      - key: "description"
+        label: "Description"
+    queryTemplate: |-
+      PREFIX biolink: <https://w3id.org/biolink/vocab/>
+      PREFIX dct: <http://purl.org/dc/terms/>
+      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+      SELECT ?id (SAMPLE(?label) AS ?name) (SAMPLE(?desc) AS ?description)
+      WHERE {
+        GRAPH <{{graph}}> {
+          ?id biolink:category <{{category}}> .
+          OPTIONAL { ?id rdfs:label ?label }
+          OPTIONAL { ?id dct:description ?desc }
+        }
+      }
+      GROUP BY ?id
+      ORDER BY ?name ?id
+      LIMIT 500
+    classes:
+      - name: "PatchedCell"
+        category: "https://identifiers.org/brain-bican/vocab/PatchedCell"
+        noun: ["cell", "cells"]
+        description: "A cell recorded with patch clamp and then collected for sequencing."
+      - name: "Donor"
+        category: "https://identifiers.org/brain-bican/vocab/Donor"
+        noun: ["donor", "donors"]
+      - name: "BarcodedCellSample"
+        category: "https://identifiers.org/brain-bican/vocab/BarcodedCellSample"
+      - name: "LibraryAliquot"
+        category: "https://identifiers.org/brain-bican/vocab/LibraryAliquot"
+      - name: "DigitalAsset"
+        category: "https://identifiers.org/brain-bican/vocab/DigitalAsset"
+        description: "Sequencing data files (FASTQ, on NeMO)."
+      - name: "PatchClampEphysRecording"
+        category: "https://identifiers.org/brain-bican/vocab/PatchClampEphysRecording"
+        noun: ["recording", "recordings"]
+        description: "The electrophysiology recording (NWB, on DANDI)."
+      - name: "ImageStack"
+        category: "https://identifiers.org/brain-bican/vocab/ImageStack"
+        description: "The cell's image stack (TIFF, on BIL)."
+      - name: "NeuronReconstruction"
+        category: "https://identifiers.org/brain-bican/vocab/NeuronReconstruction"
+        description: "The morphology reconstruction (SWC, on BIL)."
+      - name: "LongSquareFeatureSet"
+        category: "https://identifiers.org/brain-bican/vocab/LongSquareFeatureSet"
+      - name: "ShortSquareFeatureSet"
+        category: "https://identifiers.org/brain-bican/vocab/ShortSquareFeatureSet"
+      - name: "RampFeatureSet"
+        category: "https://identifiers.org/brain-bican/vocab/RampFeatureSet"
+      - name: "ChirpFeatureSet"
+        category: "https://identifiers.org/brain-bican/vocab/ChirpFeatureSet"
+      - name: "MorphologyFeatureSet"
+        category: "https://identifiers.org/brain-bican/vocab/MorphologyFeatureSet"
+      - name: "CellTypeMapping"
+        category: "https://identifiers.org/brain-bican/vocab/CellTypeMapping"
+        noun: ["mapping", "mappings"]
+        description: "The cell's mapping to a taxonomy cluster (MapMyCells)."
+      - name: "StimulusSet"
+        category: "https://identifiers.org/brain-bican/vocab/StimulusSet"
+      - name: "StimulusProtocol"
+        category: "https://identifiers.org/brain-bican/vocab/StimulusProtocol"

@@ -45,7 +45,31 @@ type PageConfig = {
   graph?: string;
   detailQueryTemplate?: string;
   model?: ModelSource;
+  // Predicates whose target is a taxonomy cluster (e.g. a Patch-seq cell's
+  // mapped_cluster). Those links open the cluster's cell type on /taxonomy
+  // (its most specific taxon with an accession id) instead of a record here.
+  taxonomyLinks?: string[];
 };
+
+// The most specific named taxon of each cluster: the parent with an accession
+// id at the deepest level (has_parent+: a cluster may point only at its
+// cluster-level taxon). GRAPH ?g, because the taxonomy sits in its own graph.
+const CLUSTER_TAXON_QUERY = `PREFIX bican: <https://identifiers.org/brain-bican/vocab/>
+SELECT ?cluster ?taxon ?order
+WHERE {
+  VALUES ?cluster { {{clusters}} }
+  GRAPH ?g {
+    ?cluster bican:has_parent+ ?taxon .
+    ?taxon bican:accession_id ?accession ;
+           bican:part_of_set/bican:order ?order .
+  }
+}`;
+
+// Locally there is no query service for /taxonomy's stored queries, so dev
+// builds can point the link at the page's sample mode instead.
+const TAXONOMY_SAMPLE = process.env.NEXT_PUBLIC_DEV_TAXONOMY_SAMPLE === "1";
+const taxonomyHref = (taxon: string) =>
+  `/taxonomy?taxon=${encodeURIComponent(taxon)}${TAXONOMY_SAMPLE ? "&sample=1" : ""}`;
 type Term = { value?: string; type?: string; datatype?: string };
 type Row = { direction?: Term; predicate?: Term; other?: Term; otherCategory?: Term; otherLabel?: Term };
 
@@ -238,6 +262,43 @@ function DetailView({ page, id }: { page: PageConfig; id: string }) {
   useEffect(() => {
     load();
   }, [load]);
+
+  // Cluster -> its taxon on /taxonomy, for the predicates in page.taxonomyLinks.
+  const [taxonOf, setTaxonOf] = useState<Map<string, string>>(new Map());
+  useEffect(() => {
+    const predicates = page.taxonomyLinks ?? [];
+    const clusters = [...new Set(
+      rows
+        .filter((r) => r.direction?.value === "out" && predicates.includes(r.predicate?.value ?? "") && r.other?.type === "uri")
+        .map((r) => r.other!.value!),
+    )];
+    if (clusters.length === 0) return;
+    let cancelled = false;
+    const sparqlQuery = CLUSTER_TAXON_QUERY.replace("{{clusters}}", clusters.map((c) => `<${c}>`).join(" "));
+    fetch("/api/knowledge-base", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ slug: `cluster-taxa-${page.slug}-${id}`, sparqlQuery }),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (cancelled || json?.success === false) return;
+        const best = new Map<string, { taxon: string; order: number }>();
+        for (const b of (json.data ?? []) as Record<string, Term>[]) {
+          const cluster = b.cluster?.value, taxon = b.taxon?.value, order = Number(b.order?.value ?? -1);
+          if (!cluster || !taxon) continue;
+          const cur = best.get(cluster);
+          if (!cur || order > cur.order) best.set(cluster, { taxon, order });
+        }
+        setTaxonOf(new Map([...best].map(([c, v]) => [c, v.taxon])));
+      })
+      .catch(() => {}); // no taxon found: the link stays a plain record link
+    return () => { cancelled = true; };
+  }, [rows, page.taxonomyLinks, page.slug, id]);
+  const hrefOf = (target: string) =>
+    taxonOf.has(target)
+      ? taxonomyHref(taxonOf.get(target)!)
+      : `/browse/${page.slug}/${encodeURIComponent(target)}${linkSuffix}`;
 
   // "class" rows are not content: they carry each neighbour's category so the
   // figure can name what this record is actually connected to.
@@ -442,6 +503,7 @@ function DetailView({ page, id }: { page: PageConfig; id: string }) {
               targetOf={targetOf}
               neighbourLabel={neighbourLabel}
               linkSuffix={linkSuffix}
+              hrefOf={hrefOf}
             />
             <TermSection
               title="Connections"
@@ -450,6 +512,7 @@ function DetailView({ page, id }: { page: PageConfig; id: string }) {
               targetOf={targetOf}
               neighbourLabel={neighbourLabel}
               linkSuffix={linkSuffix}
+              hrefOf={hrefOf}
             />
             {entityClass && hasModelEdges && (
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -468,6 +531,7 @@ function DetailView({ page, id }: { page: PageConfig; id: string }) {
               targetOf={targetOf}
               neighbourLabel={neighbourLabel}
               linkSuffix={linkSuffix}
+              hrefOf={hrefOf}
             />
             <details className="detail-tech">
               <summary>Technical details: RDF identifiers ({rawRows.length} triples)</summary>
@@ -537,6 +601,7 @@ function TermSection({
   targetOf,
   neighbourLabel,
   linkSuffix,
+  hrefOf,
 }: {
   title: string;
   groups: Group[];
@@ -544,6 +609,7 @@ function TermSection({
   targetOf: (row: Row) => string | null;
   neighbourLabel: Map<string, string>;
   linkSuffix: string;
+  hrefOf: (target: string) => string;
 }) {
   if (groups.length === 0) return null;
 
@@ -592,6 +658,7 @@ function TermSection({
                             pageSlug={pageSlug}
                             neighbourLabel={neighbourLabel}
                             linkSuffix={linkSuffix}
+                            hrefOf={hrefOf}
                           />
                         </div>
                       ))}
@@ -613,12 +680,14 @@ function TermValue({
   pageSlug,
   neighbourLabel,
   linkSuffix,
+  hrefOf,
 }: {
   row: Row;
   target: string | null;
   pageSlug: string;
   neighbourLabel: Map<string, string>;
   linkSuffix: string;
+  hrefOf: (target: string) => string;
 }) {
   const value = row.other?.value || "";
   if (target) {
@@ -628,7 +697,7 @@ function TermValue({
     return (
       <>
         <Link
-          href={`/browse/${pageSlug}/${encodeURIComponent(target)}${linkSuffix}`}
+          href={hrefOf(target)}
           title={target}
           style={{ color: COLORS.accentPurple, fontWeight: 500 }}
         >

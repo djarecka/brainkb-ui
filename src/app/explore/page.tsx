@@ -39,6 +39,15 @@ const TYPES: DataType[] = [
     action: "View the HMBA taxonomy",
   },
   {
+    name: "Patch-seq",
+    icon: "◈",
+    desc: "Patch-seq cells with their donor, sequencing files, electrophysiology and morphology features, and the taxonomy cluster each one maps to.",
+    sources: "BICAN",
+    programs: ["BICAN"],
+    href: "/browse/patchseq",
+    action: "Browse Patch-seq cells",
+  },
+  {
     name: "BICAN Resources",
     icon: "▣",
     desc: "All resources published by the BICAN consortium.",
